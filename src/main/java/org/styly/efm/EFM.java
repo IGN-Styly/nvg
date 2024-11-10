@@ -8,7 +8,7 @@ import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItemReg;
+import org.styly.efm.registries.ModItems;
 import org.styly.efm.registries.ModSounds;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -20,7 +20,7 @@ public class EFM {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public EFM(IEventBus modEventBus, ModContainer modContainer) {
-        ModItemReg.register(modEventBus);
+        ModItems.register(modEventBus);
         DataCompReg.register(modEventBus);
         ModSounds.register(modEventBus);
 

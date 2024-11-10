@@ -11,11 +11,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.styly.efm.EFM;
+import org.styly.efm.components.nvgtoggle;
 import org.styly.efm.network.ToggleRecord;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItemReg;
+import org.styly.efm.registries.ModItems;
 
 import java.util.Objects;
 
@@ -30,12 +31,13 @@ public class ClientEvent {
             return;
         }
         ItemStack nvg = entity.getItemBySlot(EquipmentSlot.HEAD);
-        if (NVG_MAPPING.consumeClick() && (nvg.is(ModItemReg.NVG_DOWN) || nvg.is(ModItemReg.NVG_WP)) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+        if (NVG_MAPPING.consumeClick() && (nvg.has(DataCompReg.NVG_TOGGLE)) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
             PacketDistributor.sendToServer(new ToggleRecord(0, 0));
-            if (nvg.is(ModItemReg.NVG_DOWN)) {
+            nvgtoggle nt = nvg.get(DataCompReg.NVG_TOGGLE);
+            if (nt.id()==0) {
                 GPNVG_POST.INSTANCE.setActive(!Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
                 WPNVG_POST.INSTANCE.setActive(Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
-            } else if (nvg.is(ModItemReg.NVG_WP)) {
+            } else if (nt.id()==1) {
                 WPNVG_POST.INSTANCE.setActive(!Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
                 GPNVG_POST.INSTANCE.setActive(Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
             }

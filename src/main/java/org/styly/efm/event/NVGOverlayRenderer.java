@@ -14,7 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import org.styly.efm.EFM;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItemReg;
+import org.styly.efm.registries.ModItems;
 
 import static org.styly.efm.EFM.id;
 
@@ -28,7 +28,7 @@ public class NVGOverlayRenderer {
         Minecraft minecraft = Minecraft.getInstance();
         ItemStack nvg = minecraft.player.getItemBySlot(EquipmentSlot.HEAD);
 
-        if ((nvg.is(ModItemReg.NVG_DOWN) || nvg.is(ModItemReg.NVG_WP)) && nvg.get(DataCompReg.NVG_TOGGLE).toggle()) {
+        if (nvg.has(DataCompReg.NVG_TOGGLE) && nvg.get(DataCompReg.NVG_TOGGLE).toggle()) {
             renderHelmetOverlay(event.getGuiGraphics());
         }
     }

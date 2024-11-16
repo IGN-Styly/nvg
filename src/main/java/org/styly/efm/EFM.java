@@ -7,9 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItems;
-import org.styly.efm.registries.ModSounds;
+import org.styly.efm.registries.*;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(EFM.MODID)
@@ -19,11 +17,12 @@ public class EFM {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public EFM(IEventBus modEventBus, ModContainer modContainer) {
-        ModItems.register(modEventBus);
-        DataCompReg.register(modEventBus);
-        ModSounds.register(modEventBus);
-
+    public EFM(IEventBus eventBus, ModContainer modContainer) {
+        ModItems.register(eventBus);
+        ModBlocks.register(eventBus);
+        DataCompReg.register(eventBus);
+        ModSounds.register(eventBus);
+        ModTile.register(eventBus);
     }
 
     public static ResourceLocation id(@NotNull String path) {

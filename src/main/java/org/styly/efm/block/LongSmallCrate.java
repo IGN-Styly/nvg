@@ -3,7 +3,9 @@ package org.styly.efm.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LongSmallCrate extends BaseEntityBlock {
-    public static final VoxelShape BLOCK_AABB = Block.box(0, 0, 0, 32, 15, 16);
+    public static final VoxelShape BLOCK_AABB = Block.box(0, 0, 0, 16, 15, 16);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
 
@@ -35,6 +37,17 @@ public class LongSmallCrate extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         // this is where the properties are actually added to the state
         pBuilder.add(FACING, PART);
+    }
+
+    @Override
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
+        if (!worldIn.isClientSide) {
+            BlockPos relative = pos.relative(state.getValue(FACING));
+            worldIn.setBlock(relative, state.setValue(PART, BedPart.HEAD), Block.UPDATE_ALL);
+            worldIn.blockUpdated(pos, Blocks.AIR);
+            state.updateNeighbourShapes(worldIn, pos, Block.UPDATE_ALL);
+        }
     }
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
@@ -95,6 +108,7 @@ public class LongSmallCrate extends BaseEntityBlock {
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return BLOCK_AABB;
     }
+
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id 'net.neoforged.gradle.userdev' version '7.0.170'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -18,13 +18,17 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
+
 repositories {
     mavenLocal()
     mavenCentral()
     flatDir {
         dir 'libs'
     }
-
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
     maven { url = "https://maven.enginehub.org/repo/" }
     maven {
         url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
@@ -126,9 +130,10 @@ dependencies {
     // And its provides the option to then use net.minecraft as the group, and one of; client, server or joined as the module name, plus the game version as version.
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
+    runtimeOnly "maven.modrinth:iris:1.8.0+1.21.1-neoforge"
+    runtimeOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-neoforge"
     implementation "team.lodestar.lodestone:lodestone:${lodestone_version}"
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    implementation "curse.maven:adorned-1036809:5546365"
+    implementation "maven.modrinth:geckolib:${geckolib_version}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

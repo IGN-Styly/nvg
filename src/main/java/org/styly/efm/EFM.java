@@ -23,6 +23,7 @@ public class EFM {
         DataCompReg.register(eventBus);
         ModSounds.register(eventBus);
         ModTile.register(eventBus);
+        ModMenus.register(eventBus);
     }
 
     public static ResourceLocation id(@NotNull String path) {

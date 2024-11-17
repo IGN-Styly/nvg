@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.IEventBus;
@@ -33,7 +34,7 @@ public class DataCompReg {
 
     // In another class
 // The specialized DeferredRegister.DataComponents simplifies data component registration and avoids some generic inference issues with the `DataComponentType.Builder` within a `Supplier`
-    public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(EFM.MODID);
+    public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE,EFM.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<nvgtoggle>> NVG_TOGGLE = REGISTRAR.registerComponentType(
             "nvg_toggle",

@@ -8,7 +8,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import org.styly.efm.EFM;
-import org.styly.efm.block.LongSmallCrateTileRenderer;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
 import org.styly.efm.registries.ModTile;
@@ -23,10 +22,10 @@ public class ClientSetup {
     }
     @SubscribeEvent
     public static void registerTileRenderer(EntityRenderersEvent.RegisterRenderers event){
-        event.registerBlockEntityRenderer(ModTile.LONG_SMALL_CRATE_TILE.get(), LongSmallCrateTileRenderer::new);
     }
     @SubscribeEvent
     public static void registerAdditionalModels(ModelEvent.RegisterAdditional event){
         event.register(new ModelResourceLocation(EFM.id("block/small_crate"),"standalone"));
     }
+
 }

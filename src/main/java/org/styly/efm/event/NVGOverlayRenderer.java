@@ -13,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import org.styly.efm.EFM;
+import org.styly.efm.components.nvgtoggle;
 import org.styly.efm.registries.DataCompReg;
 import org.styly.efm.registries.ModItems;
 
@@ -20,7 +21,8 @@ import static org.styly.efm.EFM.id;
 
 @EventBusSubscriber(modid = EFM.MODID, value = Dist.CLIENT)
 public class NVGOverlayRenderer {
-    private static final ResourceLocation OVERLAY = id("textures/misc/nvgov.png");
+    private static final ResourceLocation OVERLAY_0 = id("textures/misc/nvgov.png");
+    private static final ResourceLocation OVERLAY_1 = id("textures/misc/spnvg.png");
     private static ShaderInstance shader; // Your custom shader instance
 
     @SubscribeEvent
@@ -28,16 +30,25 @@ public class NVGOverlayRenderer {
         Minecraft minecraft = Minecraft.getInstance();
         ItemStack nvg = minecraft.player.getItemBySlot(EquipmentSlot.HEAD);
 
-        if (nvg.has(DataCompReg.NVG_TOGGLE) && nvg.get(DataCompReg.NVG_TOGGLE).toggle()) {
-            renderHelmetOverlay(event.getGuiGraphics());
+        if (nvg.has(DataCompReg.NVG_TOGGLE)) {
+            nvgtoggle data =  nvg.get(DataCompReg.NVG_TOGGLE);
+            if(data.toggle()){
+                renderHelmetOverlay(event.getGuiGraphics(), data.overlay());
+            }
         }
     }
 
-    private static void renderHelmetOverlay(GuiGraphics guiGraphics) {
+    private static void renderHelmetOverlay(GuiGraphics guiGraphics,int overlay) {
         Minecraft minecraft = Minecraft.getInstance();
-
+        ResourceLocation OVERLAY;
+        switch (overlay){
+            case 0:  OVERLAY = OVERLAY_0;   break;
+            case 1:  OVERLAY = OVERLAY_1;   break;
+            default: OVERLAY=OVERLAY_1;     break;
+        }
         // Bind the overlay texture
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
+
         RenderSystem.setShaderTexture(0, OVERLAY);
 
         // Set blending to allow transparency in the overlay

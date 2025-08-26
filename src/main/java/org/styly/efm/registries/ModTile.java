@@ -6,20 +6,13 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.styly.efm.EFM;
-import org.styly.efm.block.LongSmallCrateTile;
 import org.styly.efm.block.SmallCrateTile;
-
-import java.util.function.Supplier;
 
 public class ModTile {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, EFM.MODID);
 
-    public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<LongSmallCrateTile>> LONG_SMALL_CRATE_TILE = BLOCK_ENTITY_TYPES.register(
-            "long_small_crate_tile",
-            // The block entity type.
-            ()->BlockEntityType.Builder.of(LongSmallCrateTile::new,ModBlocks.LONG_SMALL_CRATE.get()).build(null)
-    );
+
     public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<SmallCrateTile>> SMALL_CRATE_TILE = BLOCK_ENTITY_TYPES.register(
             "small_crate_tile",
             // The block entity type.

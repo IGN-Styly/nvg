@@ -22,12 +22,14 @@ public class DataCompReg {
     public static final Codec<nvgtoggle> BASIC_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.BOOL.fieldOf("toggle").forGetter(nvgtoggle::toggle),
-                    Codec.INT.fieldOf("id").forGetter(nvgtoggle::id)
+                    Codec.INT.fieldOf("id").forGetter(nvgtoggle::id),
+                    Codec.INT.fieldOf("overlay").forGetter(nvgtoggle::overlay)
             ).apply(instance, nvgtoggle::new)
     );
     public static final StreamCodec<ByteBuf, nvgtoggle> BASIC_STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, nvgtoggle::toggle,
             ByteBufCodecs.INT, nvgtoggle::id,
+            ByteBufCodecs.INT, nvgtoggle::overlay,
             nvgtoggle::new
     );
 

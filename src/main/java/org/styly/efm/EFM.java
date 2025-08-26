@@ -24,6 +24,7 @@ public class EFM {
         ModSounds.register(eventBus);
         ModTile.register(eventBus);
         ModMenus.register(eventBus);
+        TabRegistry.register(eventBus);
     }
 
     public static ResourceLocation id(@NotNull String path) {

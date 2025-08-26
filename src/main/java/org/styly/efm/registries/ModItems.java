@@ -14,10 +14,10 @@ import org.styly.efm.item.gpnvg;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EFM.MODID);
 
-    public static final DeferredItem<Item> NVG_GP = ITEMS.register("gpnvg", () -> new gpnvg(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, new Item.Properties().component(DataCompReg.NVG_TOGGLE, new nvgtoggle(false,0))));
-    public static final DeferredItem<Item> NVG_WP = ITEMS.register("wpnvg", () -> new gpnvg(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, new Item.Properties().component(DataCompReg.NVG_TOGGLE, new nvgtoggle(false,1))));
+    public static final DeferredItem<Item> NVG_GP = ITEMS.register("gpnvg", () -> new gpnvg(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).component(DataCompReg.NVG_TOGGLE, new nvgtoggle(false,0,0)),false));
+    public static final DeferredItem<Item> NVG_WP = ITEMS.register("wpnvg", () -> new gpnvg(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).component(DataCompReg.NVG_TOGGLE, new nvgtoggle(false,1,0)),false));
+    public static final DeferredItem<Item> NVG_GP_SP = ITEMS.register("gpnvg_st", () -> new gpnvg(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).component(DataCompReg.NVG_TOGGLE, new nvgtoggle(false,0,1)),true));
 
-    public static final DeferredItem<BlockItem> LONG_SMALL_CRATE_ITEM = ITEMS.registerSimpleBlockItem(ModBlocks.LONG_SMALL_CRATE);
     public static final DeferredItem<BlockItem> SMALL_CRATE_ITEM = ITEMS.registerSimpleBlockItem(ModBlocks.SMALL_CRATE);
 
     public static void register(IEventBus eventBus) {

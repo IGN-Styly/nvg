@@ -1,62 +1,77 @@
 package org.styly.efm.block;
 
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-import org.styly.efm.registries.ModMenus;
 
 public class CrateMenu extends AbstractContainerMenu {
-    private static final int SLOTS_PER_ROW = 9;
     private final Container container;
-    private final int containerRows;
 
-    private CrateMenu(MenuType<?> pType, int pContainerId, Inventory pPlayerInventory, int pRows,int pCols) {
-        this(pType, pContainerId, pPlayerInventory,new SimpleContainer(pCols*pRows), pRows,pCols);
-    }
-    public static CrateMenu customCrate(MenuType<?> pType, int pContainerId, Inventory pPlayerInventory, int pRows,int pCols) {
-        return new CrateMenu(pType, pContainerId, pPlayerInventory,new SimpleContainer(pCols*pRows), pRows,pCols);
-    }
-//    public static CrateMenu fourx3(int pContainerId, Inventory pPlayerInventory){
-//        return customCrate(ModMenus.MY_MENU.get(), pContainerId,pPlayerInventory,4,3);
-//    }
+    public CrateMenu(int id, Inventory playerInventory, Container crateInventory) {
+        super(MenuType.GENERIC_3x3, id); // You can use a custom MenuType if needed
+        this.container = crateInventory;
+        crateInventory.startOpen(playerInventory.player);
 
-    @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        return null;
-    }
+        // Crate slots (1 row of 9)
+        for (int i = 0; i < 9; i++) {
+            this.addSlot(new Slot(crateInventory, i, 8 + i * 18, 18));
+        }
 
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return false;
-    }
-    public CrateMenu(MenuType<?> pType, int pContainerId, Inventory pPlayerInventory, Container pContainer, int pRows,int pCols) {
-        super(pType, pContainerId);
-        checkContainerSize(pContainer, pRows * pCols);
-        this.container = pContainer;
-        this.containerRows = pRows;
-        pContainer.startOpen(pPlayerInventory.player);
-        int i = (this.containerRows - 4) * 18;
-
-        for (int j = 0; j < this.containerRows; j++) {
-            for (int k = 0; k < pCols; k++) {
-                this.addSlot(new Slot(pContainer, k + j * pCols, 8 + k * 18, 18 + j * 18));
+        // Player inventory slots (3 rows of 9)
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < 9; ++col) {
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 50 + row * 18));
             }
         }
 
-        for (int l = 0; l < 3; l++) {
-            for (int j1 = 0; j1 < 9; j1++) {
-                this.addSlot(new Slot(pPlayerInventory, j1 + l * 9 + 9, 8 + j1 * 18, 103 + l * 18 + i));
+        // Hotbar (1 row of 9)
+        for (int col = 0; col < 9; ++col) {
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 108));
+        }
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return container.stillValid(player);
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
+            ItemStack copy = stack.copy();
+
+            int crateSlots = 9;
+            int inventoryStart = crateSlots;
+            int inventoryEnd = this.slots.size();
+
+            if (index < crateSlots) {
+                // Moving from crate to player inventory
+                if (!this.moveItemStackTo(stack, inventoryStart, inventoryEnd, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                // Moving from player inventory to crate
+                if (!this.moveItemStackTo(stack, 0, crateSlots, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
+
+            if (stack.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            slot.onTake(player, stack);
+            return copy;
         }
 
-        for (int i1 = 0; i1 < 9; i1++) {
-            this.addSlot(new Slot(pPlayerInventory, i1, 8 + i1 * 18, 161 + i));
-        }
+        return ItemStack.EMPTY;
     }
 }

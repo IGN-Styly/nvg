@@ -2,6 +2,6 @@
   "item.efm.gpnvg": "GPNVG",
   "item.efm.wpnvg": "WPNVG",
   "item.efm.gpnvg_st": "GPNVG",
-  "key.efm.toggle": "Toggle NVG",
+  "key.efm.nvg_toggle": "Toggle NVG",
   "efm.ui.small_crate": "Small Crate"
 }

@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.styly.efm.EFM;
 import org.styly.efm.components.nvgtoggle;
+import org.styly.efm.inventory.EFMInventory;
 import org.styly.efm.network.ToggleRecord;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
@@ -20,12 +21,19 @@ import org.styly.efm.registries.ModItems;
 
 import java.util.Objects;
 
+import static org.styly.efm.registries.KeyReg.INV_MAPPING;
 import static org.styly.efm.registries.KeyReg.NVG_MAPPING;
 
 @EventBusSubscriber(modid = EFM.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ClientEvent {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
+        if (INV_MAPPING.consumeClick()){
+            Minecraft mc = Minecraft.getInstance();
+            mc.setScreen(new EFMInventory());
+
+
+        }
         Player entity = Minecraft.getInstance().player;
         if (entity == null) {
             return;

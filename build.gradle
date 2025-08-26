@@ -134,6 +134,7 @@ dependencies {
     runtimeOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-neoforge"
     implementation "team.lodestar.lodestone:lodestone:${lodestone_version}"
     implementation "maven.modrinth:geckolib:${geckolib_version}"
+    implementation "maven.modrinth:owo-lib:${owo_lib}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

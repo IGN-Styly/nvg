@@ -14,14 +14,21 @@ public class KeyReg {
 
     // Key mapping is lazily initialized so it doesn't exist until it is registered
     public static final KeyMapping NVG_MAPPING = new KeyMapping(
-            "key.nvg.toggle", // Will be localized using this translation key
+            "key.efm.nvg_toggle", // Will be localized using this translation key
             InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
             GLFW.GLFW_KEY_G, // Default key is G
+            "key.categories.misc" // Mapping will be in the misc category
+    );
+    public static final KeyMapping INV_MAPPING = new KeyMapping(
+            "key.efm.inventory", // Will be localized using this translation key
+            InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
+            GLFW.GLFW_KEY_I, // Default key is G
             "key.categories.misc" // Mapping will be in the misc category
     );
 
     @SubscribeEvent
     public static void onRegisterKeybinds(RegisterKeyMappingsEvent event) {
         event.register(NVG_MAPPING);
+        event.register(INV_MAPPING);
     }
 }

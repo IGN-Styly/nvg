@@ -1,7 +1,10 @@
 package org.styly.efm.inventory;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -9,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Screen for displaying and interacting with an EFM inventory.
@@ -136,6 +140,25 @@ public class EFMInventoryScreen extends Screen {
 
         // Call parent render method for buttons, etc.
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            this.onClose();
+            return true;
+        } else if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        } else {
+            if (keyCode == GLFW.GLFW_KEY_R) {
+                // Rotate the currently dragged item when R is pressed
+                if (inventory.rotateDraggedItem()) {
+                    return true; // true means we handled it
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override

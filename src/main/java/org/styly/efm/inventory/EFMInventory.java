@@ -26,7 +26,7 @@ public class EFMInventory {
     private static final int COLOR_GRID_BACKGROUND = 0xFF333333; // Darker gray for background
     private static final int COLOR_HOVER_HIGHLIGHT = 0x33FFFFFF; // Semi-transparent white for hover
     private static final int COLOR_ITEM_BACKGROUND = 0xFF444444; // Medium gray for item backgrounds
-    private static final int COLOR_GRID_OUTLINE = 0xFF666666; // Lighter gray for grid outline
+    private static final int COLOR_GRID_OUTLINE = 0xFFAAAAAA; // Lighter gray for grid outline
 
     // Visual constants
     private static final int CELL_SIZE = 32; // Size of each grid cell in pixels
@@ -130,7 +130,13 @@ public class EFMInventory {
         guiGraphics.pose().pushPose();
 
         // Create a scissor to prevent rendering outside the visible area
-        guiGraphics.enableScissor(x, y, x + visibleWidth, y + visibleHeight);
+        // But add a small margin for the borders
+        guiGraphics.enableScissor(
+            x - GRID_BORDER,
+            y - GRID_BORDER,
+            x + visibleWidth + GRID_BORDER,
+            y + visibleHeight + GRID_BORDER
+        );
 
         // Set translation to exact pixel boundaries
         guiGraphics.pose().translate(x, y, 0);
@@ -216,6 +222,24 @@ public class EFMInventory {
             }
         }
 
+        // Draw top border
+        guiGraphics.fill(
+            x - scrollX,
+            y - scrollY - GRID_BORDER,
+            x + totalWidth - scrollX,
+            y - scrollY,
+            COLOR_GRID_BORDER
+        );
+
+        // Draw left border
+        guiGraphics.fill(
+            x - scrollX - GRID_BORDER,
+            y - scrollY,
+            x - scrollX,
+            y + totalHeight - scrollY,
+            COLOR_GRID_BORDER
+        );
+
         // Draw right border
         guiGraphics.fill(
             x + totalWidth - scrollX,
@@ -234,7 +258,35 @@ public class EFMInventory {
             COLOR_GRID_BORDER
         );
 
-        // Draw bottom-right corner
+        // Draw corners
+        // top-left corner
+        guiGraphics.fill(
+            x - scrollX - GRID_BORDER,
+            y - scrollY - GRID_BORDER,
+            x - scrollX,
+            y - scrollY,
+            COLOR_GRID_BORDER
+        );
+
+        // top-right corner
+        guiGraphics.fill(
+            x + totalWidth - scrollX,
+            y - scrollY - GRID_BORDER,
+            x + totalWidth + GRID_BORDER - scrollX,
+            y - scrollY,
+            COLOR_GRID_BORDER
+        );
+
+        // bottom-left corner
+        guiGraphics.fill(
+            x - scrollX - GRID_BORDER,
+            y + totalHeight - scrollY,
+            x - scrollX,
+            y + totalHeight + GRID_BORDER - scrollY,
+            COLOR_GRID_BORDER
+        );
+
+        // bottom-right corner
         guiGraphics.fill(
             x + totalWidth - scrollX,
             y + totalHeight - scrollY,
@@ -282,7 +334,7 @@ public class EFMInventory {
         int x,
         int y
     ) {
-        // Get the actual width and height in pixels
+        // Get the item dimensions based on its rotation state
         int width = item.getWidth() * CELL_SIZE;
         int height = item.getHeight() * CELL_SIZE;
 
@@ -524,23 +576,10 @@ public class EFMInventory {
             }
         } else if (button == 1) {
             // Right click
-            // Rotate item under cursor
+            // No longer rotates items (use R key instead)
             InventoryItem clickedItem = getItemAt(gridY, gridX);
             if (clickedItem != null) {
-                // Remove item before rotation
-                grid.removeItem(clickedItem);
-
-                // Rotate the item
-                clickedItem.rotate();
-
-                // Try to place back at same position
-                if (grid.canPlaceItem(clickedItem, gridY, gridX)) {
-                    grid.placeItem(clickedItem, gridY, gridX);
-                } else {
-                    // If can't place after rotation, rotate back
-                    clickedItem.rotate();
-                    grid.placeItem(clickedItem, gridY, gridX);
-                }
+                // We could add other functionality here in the future
                 return true;
             }
         }
@@ -818,5 +857,104 @@ public class EFMInventory {
         // Update grid reference and scroll limits
         this.grid = newGrid;
         updateScrollLimits();
+    }
+
+    /**
+     * Rotates the item currently being dragged.
+     * Only works if the item is rotatable.
+     *
+     * @return true if an item was rotated, false otherwise
+     */
+    public boolean rotateDraggedItem() {
+        // Check if we have a dragged item
+        if (draggedItem != null) {
+            // Check if the item is rotatable
+            if (
+                draggedItem.getStack() != null &&
+                draggedItem.getStack() != ItemStack.EMPTY &&
+                draggedItem.isRotatable()
+            ) {
+                // Calculate current dimensions in pixels
+                int oldWidthPx =
+                    draggedItem.getWidth() * (CELL_SIZE + GRID_BORDER);
+                int oldHeightPx =
+                    draggedItem.getHeight() * (CELL_SIZE + GRID_BORDER);
+
+                // Remember the relative grab position (as percentage of item size)
+                float relativeGrabX = (float) dragOffsetX / oldWidthPx;
+                float relativeGrabY = (float) dragOffsetY / oldHeightPx;
+
+                // Record whether item was rotated before this rotation
+                boolean wasRotated = draggedItem.isRotated();
+
+                // Rotate the item (this will swap dimensions if going from normal to rotated)
+                draggedItem.rotate();
+
+                // Get new dimensions in pixels
+                int newWidthPx =
+                    draggedItem.getWidth() * (CELL_SIZE + GRID_BORDER);
+                int newHeightPx =
+                    draggedItem.getHeight() * (CELL_SIZE + GRID_BORDER);
+
+                // If dimensions actually swapped
+                if (wasRotated != draggedItem.isRotated()) {
+                    // When dimensions swap, we need to swap relative coordinates too
+                    float temp = relativeGrabX;
+                    relativeGrabX = relativeGrabY;
+                    relativeGrabY = temp;
+                }
+
+                // Calculate new drag offsets using the new dimensions
+                dragOffsetX = Math.round(relativeGrabX * newWidthPx);
+                dragOffsetY = Math.round(relativeGrabY * newHeightPx);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Rotates the item currently being hovered by the cursor.
+     * Only works if the item is rotatable.
+     *
+     * @return true if an item was rotated, false otherwise
+     */
+    public boolean rotateHoveredItem() {
+        // Check if we have valid hover coordinates
+        if (hoveredRow >= 0 && hoveredCol >= 0) {
+            InventoryItem item = getItemAt(hoveredRow, hoveredCol);
+            if (item != null) {
+                // Find the item's actual position (top-left corner)
+                Optional<int[]> posOpt = findItemPosition(item);
+                if (posOpt.isPresent()) {
+                    // Check if the item is rotatable
+                    if (
+                        item.getStack() != null &&
+                        item.getStack() != ItemStack.EMPTY
+                    ) {
+                        // Get the item's original position
+                        int[] pos = posOpt.get();
+
+                        // Remove the item from the grid first
+                        grid.removeItem(item);
+
+                        // Rotate the item
+                        item.rotate();
+
+                        // Try to place the item back at the same position
+                        if (grid.canPlaceItem(item, pos[0], pos[1])) {
+                            grid.placeItem(item, pos[0], pos[1]);
+                            return true;
+                        } else {
+                            // If it can't be placed after rotation, rotate it back
+                            item.rotate();
+                            grid.placeItem(item, pos[0], pos[1]);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

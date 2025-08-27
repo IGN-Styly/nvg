@@ -9,9 +9,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CrateMenu extends AbstractContainerMenu {
+
     private final Container container;
 
-    public CrateMenu(int id, Inventory playerInventory, Container crateInventory) {
+    public CrateMenu(
+        int id,
+        Inventory playerInventory,
+        Container crateInventory
+    ) {
         super(MenuType.GENERIC_3x3, id); // You can use a custom MenuType if needed
         this.container = crateInventory;
         crateInventory.startOpen(playerInventory.player);
@@ -24,7 +29,14 @@ public class CrateMenu extends AbstractContainerMenu {
         // Player inventory slots (3 rows of 9)
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 50 + row * 18));
+                this.addSlot(
+                    new Slot(
+                        playerInventory,
+                        col + row * 9 + 9,
+                        8 + col * 18,
+                        50 + row * 18
+                    )
+                );
             }
         }
 
@@ -52,7 +64,14 @@ public class CrateMenu extends AbstractContainerMenu {
 
             if (index < crateSlots) {
                 // Moving from crate to player inventory
-                if (!this.moveItemStackTo(stack, inventoryStart, inventoryEnd, true)) {
+                if (
+                    !this.moveItemStackTo(
+                        stack,
+                        inventoryStart,
+                        inventoryEnd,
+                        true
+                    )
+                ) {
                     return ItemStack.EMPTY;
                 }
             } else {

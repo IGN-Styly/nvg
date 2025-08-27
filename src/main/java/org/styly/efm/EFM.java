@@ -12,6 +12,7 @@ import org.styly.efm.registries.*;
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(EFM.MODID)
 public class EFM {
+
     // Define mod id in a common place for everything to reference
     public static final String MODID = "efm";
     // Directly reference a slf4j logger
@@ -30,5 +31,4 @@ public class EFM {
     public static ResourceLocation id(@NotNull String path) {
         return ResourceLocation.fromNamespaceAndPath(EFM.MODID, path);
     }
-
 }

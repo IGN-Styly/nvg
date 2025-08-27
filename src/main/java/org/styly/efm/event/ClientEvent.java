@@ -13,6 +13,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.styly.efm.EFM;
 import org.styly.efm.components.nvgtoggle;
 import org.styly.efm.inventory.EFMInventory;
+import org.styly.efm.inventory.EFMInventoryScreen;
 import org.styly.efm.network.ToggleRecord;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
@@ -30,8 +31,8 @@ public class ClientEvent {
     public static void onKeyInput(InputEvent.Key event) {
         if (INV_MAPPING.consumeClick()){
             Minecraft mc = Minecraft.getInstance();
-            mc.setScreen(new EFMInventory());
-
+//            mc.setScreen(new EFMInventoryScreen());
+            EFMInventoryScreen.open();
 
         }
         Player entity = Minecraft.getInstance().player;

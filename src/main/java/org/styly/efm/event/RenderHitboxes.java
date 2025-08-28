@@ -3,6 +3,7 @@ package org.styly.efm.event;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.List;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -57,19 +58,46 @@ public class RenderHitboxes {
             RenderType.lines()
         );
 
-        // Get hitbox and adjust for camera position
-        AABB hitbox = PlayerHitboxes.getHeadHitbox(entity);
-        AABB adjustedHitbox = hitbox.move(-camX, -camY, -camZ);
-
+        // Render head hitbox (red)
+        AABB headHitbox = PlayerHitboxes.getHeadHitbox(entity);
+        AABB adjustedHeadHitbox = headHitbox.move(-camX, -camY, -camZ);
         LevelRenderer.renderLineBox(
             poseStack,
             vertexconsumer,
-            adjustedHitbox,
-            1.0F,
+            adjustedHeadHitbox,
+            1.0F, // Red
             0.0F,
             0.0F,
             1.0F
         );
+
+        // Render torso hitbox (green)
+        AABB torsoHitbox = PlayerHitboxes.getTorsoHitbox(entity);
+        AABB adjustedTorsoHitbox = torsoHitbox.move(-camX, -camY, -camZ);
+        LevelRenderer.renderLineBox(
+            poseStack,
+            vertexconsumer,
+            adjustedTorsoHitbox,
+            0.0F,
+            1.0F, // Green
+            0.0F,
+            1.0F
+        );
+
+        // Render legs hitbox (blue)
+        AABB legsHitbox = PlayerHitboxes.getLegsHitbox(entity);
+        AABB adjustedLegsHitbox = legsHitbox.move(-camX, -camY, -camZ);
+        LevelRenderer.renderLineBox(
+            poseStack,
+            vertexconsumer,
+            adjustedLegsHitbox,
+            0.0F,
+            0.0F,
+            1.0F, // Blue
+            1.0F
+        );
+
+        // Render feet hitbox (yellow)
 
         // Restore matrix state
         poseStack.popPose();

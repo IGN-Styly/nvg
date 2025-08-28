@@ -16,14 +16,16 @@ import org.styly.efm.EFM;
 public class PlayerHitboxHandler {
 
     // Damage multipliers for different body parts
-    private static final float HEAD_DAMAGE_MULTIPLIER = 2.0F;
-    private static final float TORSO_DAMAGE_MULTIPLIER = 1.0F;
-    private static final float LEFT_LEG_DAMAGE_MULTIPLIER = 0.75F;
+    private static final float HEAD_DAMAGE_MULTIPLIER = 2.0F; // Critical hits to the head
+    private static final float TORSO_DAMAGE_MULTIPLIER = 1.0F; // Standard damage to the torso
+    private static final float LEFT_ARM_DAMAGE_MULTIPLIER = 0.7F; // Reduced damage to arms
+    private static final float RIGHT_ARM_DAMAGE_MULTIPLIER = 0.7F;
+    private static final float LEFT_LEG_DAMAGE_MULTIPLIER = 0.75F; // Reduced damage to legs
     private static final float RIGHT_LEG_DAMAGE_MULTIPLIER = 0.75F;
-    private static final float FEET_DAMAGE_MULTIPLIER = 0.5F;
+    private static final float FEET_DAMAGE_MULTIPLIER = 0.5F; // Minimal damage to feet
 
-    // Leg side enum for differentiating left and right leg hits
-    private enum LegSide {
+    // Side enum for differentiating left and right body parts
+    private enum BodySide {
         LEFT,
         RIGHT,
     }
@@ -86,21 +88,48 @@ public class PlayerHitboxHandler {
                 );
                 return;
             } else if (torsoHit != null && torsoDist == minDist) {
-                LOGGER.info("Torso hit! Standard damage applied!");
-                applyDamageModifier(
-                    event,
-                    originalDamage,
-                    TORSO_DAMAGE_MULTIPLIER
+                // Check if the hit was on the edge of the torso (arms)
+                BodySide armSide = determineArmHitSide(
+                    player,
+                    torsoHit.getLocation(),
+                    torso
                 );
+
+                if (armSide == BodySide.LEFT) {
+                    LOGGER.info(
+                        "Left arm hit! Reduced weapon accuracy applied!"
+                    );
+                    applyDamageModifier(
+                        event,
+                        originalDamage,
+                        LEFT_ARM_DAMAGE_MULTIPLIER
+                    );
+                    // Could add left arm specific effects here (e.g., reduced accuracy)
+                } else if (armSide == BodySide.RIGHT) {
+                    LOGGER.info("Right arm hit! Reduced attack speed applied!");
+                    applyDamageModifier(
+                        event,
+                        originalDamage,
+                        RIGHT_ARM_DAMAGE_MULTIPLIER
+                    );
+                    // Could add right arm specific effects here (e.g., reduced attack speed)
+                } else {
+                    LOGGER.info("Central torso hit! Standard damage applied!");
+                    applyDamageModifier(
+                        event,
+                        originalDamage,
+                        TORSO_DAMAGE_MULTIPLIER
+                    );
+                }
                 return;
             } else if (legsHit != null && legsDist == minDist) {
                 // Determine which leg was hit (left or right) based on player orientation and hit position
-                LegSide legSide = determineLegHitSide(
+                BodySide legSide = determineHitSide(
                     player,
                     legsHit.getLocation()
                 );
 
-                if (legSide == LegSide.LEFT) {
+                if (legSide == BodySide.LEFT) {
                     LOGGER.info(
                         "Left leg hit! Apply specific left leg effects!"
                     );
@@ -216,18 +245,15 @@ public class PlayerHitboxHandler {
     }
 
     /**
-     * Determines which leg (left or right) was hit based on the hit position and player orientation.
-     * This uses mathematical transformations to create the effect of separate left/right leg hitboxes
+     * Determines which side (left or right) was hit based on the hit position and player orientation.
+     * This uses mathematical transformations to create the effect of separate left/right hitboxes
      * without actually splitting the AABB, which cannot be rotated.
      *
      * @param player The player that was hit
-     * @param hitPosition The position where the ray hit the leg hitbox
-     * @return LEFT, RIGHT, or CENTER enum value indicating which leg was hit
+     * @param hitPosition The position where the ray hit the hitbox
+     * @return LEFT or RIGHT enum value indicating which side was hit
      */
-    private static LegSide determineLegHitSide(
-        Player player,
-        Vec3 hitPosition
-    ) {
+    private static BodySide determineHitSide(Player player, Vec3 hitPosition) {
         // Get player rotation (yaw) in radians
         float playerYaw = (float) Math.toRadians(player.getYRot());
 
@@ -243,20 +269,81 @@ public class PlayerHitboxHandler {
             relativeHitPos.x * Math.cos(playerYaw) +
             relativeHitPos.z * Math.sin(playerYaw);
 
-        // Get player width to calculate threshold
-        // Note: We don't use playerWidth for threshold anymore since we want every hit to be
-        // either left or right with no center zone
-
         // Minecraft uses a left-handed coordinate system where:
         // - Player facing positive Z: positive X is to the left, negative X is to the right
         // - This is because yaw=0 means looking at positive Z, and yaw increases counter-clockwise
-        // - So after our rotation transformation, negative rotatedX is RIGHT leg, positive is LEFT leg
+        // - So after our rotation transformation, negative rotatedX is RIGHT side, positive is LEFT side
         if (rotatedX < 0) {
-            LOGGER.debug("Hit on right leg: rotatedX = " + rotatedX);
-            return LegSide.RIGHT;
+            LOGGER.debug("Hit on right side: rotatedX = " + rotatedX);
+            return BodySide.RIGHT;
         } else {
-            LOGGER.debug("Hit on left leg: rotatedX = " + rotatedX);
-            return LegSide.LEFT;
+            LOGGER.debug("Hit on left side: rotatedX = " + rotatedX);
+            return BodySide.LEFT;
+        }
+    }
+
+    /**
+     * Determines if a hit on the torso should be considered an arm hit,
+     * and if so, which arm (left or right) was hit.
+     *
+     * This creates virtual arm hitboxes by considering hits near the edges
+     * of the torso hitbox as arm hits, based on the player's orientation.
+     *
+     * @param player The player that was hit
+     * @param hitPosition The position where the ray hit the torso hitbox
+     * @param torsoHitbox The torso hitbox AABB
+     * @return LEFT or RIGHT enum value if arm was hit, null if central torso
+     */
+    private static BodySide determineArmHitSide(
+        Player player,
+        Vec3 hitPosition,
+        AABB torsoHitbox
+    ) {
+        // Get player rotation (yaw) in radians
+        float playerYaw = (float) Math.toRadians(player.getYRot());
+
+        // Get player position (center point)
+        Vec3 playerPos = player.position();
+
+        // Calculate relative position of the hit within the torso hitbox (0-1 range)
+        double relX =
+            (hitPosition.x - torsoHitbox.minX) /
+            (torsoHitbox.maxX - torsoHitbox.minX);
+        double relZ =
+            (hitPosition.z - torsoHitbox.minZ) /
+            (torsoHitbox.maxZ - torsoHitbox.minZ);
+
+        // Convert to -0.5 to 0.5 range (center of hitbox is 0,0)
+        relX = relX - 0.5;
+        relZ = relZ - 0.5;
+
+        // Rotate the hit position based on player's orientation to get position in player's local coordinate system
+        double rotatedX =
+            relX * Math.cos(playerYaw) + relZ * Math.sin(playerYaw);
+
+        // Use relative coordinates within the hitbox for better precision
+        double armThreshold = 0.35; // Anything beyond 35% from center (each direction) is considered arm
+
+        // Debug info for hit location
+        LOGGER.debug(
+            "Torso hit relative position: [" +
+            relX +
+            ", " +
+            relZ +
+            "], rotated: " +
+            rotatedX
+        );
+
+        // Check if the hit is on the edge of the torso (arms)
+        if (rotatedX < -armThreshold) {
+            LOGGER.debug("Hit on right arm: rotatedX = " + rotatedX);
+            return BodySide.RIGHT;
+        } else if (rotatedX > armThreshold) {
+            LOGGER.debug("Hit on left arm: rotatedX = " + rotatedX);
+            return BodySide.LEFT;
+        } else {
+            LOGGER.debug("Hit on central torso: rotatedX = " + rotatedX);
+            return null; // Central torso hit, not an arm
         }
     }
 

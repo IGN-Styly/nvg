@@ -90,6 +90,7 @@ runs {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
+
     server {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         programArgument '--nogui'
@@ -130,11 +131,13 @@ dependencies {
     // And its provides the option to then use net.minecraft as the group, and one of; client, server or joined as the module name, plus the game version as version.
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
-    runtimeOnly "maven.modrinth:iris:1.8.0+1.21.1-neoforge"
-    runtimeOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-neoforge"
+//    runtimeOnly "maven.modrinth:iris:1.8.0+1.21.1-neoforge"
+//    runtimeOnly "maven.modrinth:sodium:mc1.21.1-0.6.0-neoforge"
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
     implementation "team.lodestar.lodestone:lodestone:${lodestone_version}"
     implementation "maven.modrinth:geckolib:${geckolib_version}"
-    implementation "maven.modrinth:owo-lib:${owo_lib}"
+//    implementation "maven.modrinth:owo-lib:${owo_lib}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

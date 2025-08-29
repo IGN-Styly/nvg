@@ -85,7 +85,6 @@ public class InventoryGrid {
         }
 
         // Update item position
-        item.setGridPosition(startRow, startCol);
         return true;
     }
 

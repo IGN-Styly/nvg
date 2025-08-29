@@ -22,6 +22,7 @@ import org.styly.efm.player.Player2DRenderer;
  */
 @OnlyIn(Dist.CLIENT)
 public class EFMInventoryScreen extends Screen {
+    ItemSlot head = new ItemSlot();
 
     public EFMInventoryScreen() {
         super(Component.literal(""));
@@ -29,7 +30,9 @@ public class EFMInventoryScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        new Player2DRenderer().render(guiGraphics,32,guiGraphics.guiHeight()/2-128,128,256,4);
-
+        new Player2DRenderer().render(guiGraphics,32,guiGraphics.guiHeight()/2-192,192,384,6);
+        head.render(guiGraphics,mouseX,mouseY,32,32);
     }
+
+
 }

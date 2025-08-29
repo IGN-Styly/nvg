@@ -31,8 +31,8 @@ public class ClientEvent {
     public static void onKeyInput(InputEvent.Key event) {
         if (INV_MAPPING.consumeClick()){
             Minecraft mc = Minecraft.getInstance();
-//            mc.setScreen(new EFMInventoryScreen());
-            EFMInventoryScreen.open();
+            mc.setScreen(new EFMInventoryScreen());
+
 
         }
         Player entity = Minecraft.getInstance().player;

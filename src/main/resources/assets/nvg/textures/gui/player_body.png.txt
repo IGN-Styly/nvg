@@ -1,0 +1,30 @@
+This is a texture description file for player_body.png (64x64 pixels)
+
+The texture should be a 64x64 pixel PNG file with the following layout:
+
+LEFT SIDE (0-31px): Base player without equipment
+RIGHT SIDE (32-63px): Equipment overlays
+
+Pixel coordinates (x,y,width,height):
+
+BASE PLAYER (Left side):
+- HEAD (8,0,16,16): Light skin tone color (#E8D5B7)
+- BODY (8,16,16,24): Dark gray tactical vest (#4A5568)
+- LEFT_ARM (0,16,8,24): Medium gray sleeves (#6B7280)
+- RIGHT_ARM (24,16,8,24): Medium gray sleeves (#6B7280)
+- LEFT_LEG (8,40,8,16): Dark tactical pants (#2D3748)
+- RIGHT_LEG (16,40,8,16): Dark tactical pants (#2D3748)
+
+EQUIPMENT OVERLAYS (Right side, +32px X offset):
+- HELMET (40,0,16,16): Dark green/brown helmet (#4A5D23)
+- ARMOR (40,16,16,24): Tactical vest with straps (#2D4A22)
+- LEFT_ARM_GEAR (32,16,8,24): Tactical sleeve gear (same as base but darker)
+- RIGHT_ARM_GEAR (56,16,8,24): Tactical sleeve gear (same as base but darker)
+- LEFT_LEG_GEAR (40,40,8,16): Tactical pants with knee pads (#1F2937)
+- RIGHT_LEG_GEAR (48,40,8,16): Tactical pants with knee pads (#1F2937)
+
+All parts should have 1px black outlines (#000000) for definition.
+Background should be transparent.
+
+This creates a simple pixel art player that looks tactical/military themed,
+similar to Escape from Tarkov's character representation.

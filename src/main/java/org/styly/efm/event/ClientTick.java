@@ -23,14 +23,12 @@ import java.util.Objects;
 @EventBusSubscriber(modid = EFM.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ClientTick {
     private static final CameraType FP = CameraType.FIRST_PERSON;
-    private static CameraType PREV_CAM = CameraType.FIRST_PERSON;
 
     @SubscribeEvent
     public static void onClientTick(PlayerTickEvent.Post event) {
         Player entity = event.getEntity();
         ItemStack nvg = entity.getItemBySlot(EquipmentSlot.HEAD);
         if (Minecraft.getInstance().options.getCameraType() != FP&&nvg.has(DataCompReg.NVG_TOGGLE)) {
-            PREV_CAM = Minecraft.getInstance().options.getCameraType();
             nvgtoggle tk = nvg.get(DataCompReg.NVG_TOGGLE);
             if (tk.id()==0&&tk.toggle()) {
                 PacketDistributor.sendToServer(new ToggleRecord(0, 0));

@@ -3,6 +3,7 @@ package org.styly.efm.inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import org.styly.efm.registries.ModItems;
 
 public class ItemSlot implements Component{
@@ -24,7 +25,8 @@ public class ItemSlot implements Component{
     public void render(
         GuiGraphics guiGraphics,
         int mouseX,
-        int mouseY
+        int mouseY,
+        int offsetY
     ) {
         int halfSize = slotSize / 2;
 
@@ -40,25 +42,23 @@ public class ItemSlot implements Component{
         // Render item inside slot
         if (!item.getItemStack().isEmpty()) {
             guiGraphics.pose().pushPose();
-
+            float padding=8f;
             // Padding around item inside slot
-            float padding = 4f;
+
             float availableSize = slotSize - padding * 2;
 
             // Scale factor for item
             float scale = availableSize / 16.0f;
+            guiGraphics.pose().translate(posX,posY,0);
             guiGraphics.pose().scale(scale, scale, 1.0f);
 
-            // Center the item
-            int scaledX = (int) ((x1 + padding) / scale);
-            int scaledY = (int) ((y1 + padding) / scale);
 
-            guiGraphics.renderItem(item.getItemStack(), scaledX, scaledY);
+            guiGraphics.renderItem(item.getItemStack(), -8, -8);
             guiGraphics.renderItemDecorations(
                 Minecraft.getInstance().font,
                 item.getItemStack(),
-                scaledX,
-                scaledY
+                -8,
+                -8
             );
 
             guiGraphics.pose().popPose();
@@ -90,4 +90,32 @@ public class ItemSlot implements Component{
         }
         return false;
     }
+
+    @Override
+    public boolean handleClick(double mouseX, double mouseY, int button,DragContext ctx) {
+        if(over(mouseX,mouseY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&!this.item.getItemStack().isEmpty()){
+            ctx.from=this;
+            ctx.dragging=true;
+            ctx.dragged=this.item;
+            this.item=new InventoryItem(ItemStack.EMPTY,0,0,false);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleRelease(double mouseX, double mouseY, int button, DragContext ctx) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY)) {
+
+                if(!item.getItemStack().isEmpty()){
+                    ctx.from.item=item;
+                }
+                ctx.dragging=false;
+                item=ctx.dragged;
+                ctx.dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
+            return true;
+        }
+        return false;
+    }
+
 }

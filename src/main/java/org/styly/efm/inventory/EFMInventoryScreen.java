@@ -27,15 +27,18 @@ import org.styly.efm.player.Player2DRenderer;
 @OnlyIn(Dist.CLIENT)
 public class EFMInventoryScreen extends Screen {
 
-    ItemSlot head = new ItemSlot(32, 32);
-    ItemSlot chest = new ItemSlot(32, 128);
-    InventoryItem dragged;
-    ItemSlot from;
-    boolean dragging=false;
 
+    DragContext context = new DragContext();
+    ArrayList<org.styly.efm.inventory.Component> components=new ArrayList<>();
     public EFMInventoryScreen() {
         super(Component.literal(""));
+        ItemSlot head = new ItemSlot(32, 32);
+        ItemSlot chest = new ItemSlot(32, 128);
+        ScrollableArea area = new ScrollableArea(new ItemSlot(128, 32));
         chest.item.setItemStack(Items.DIAMOND_SWORD.getDefaultInstance());
+        components.add(head);
+        components.add(chest);
+        components.add(area);
     }
 
     @Override
@@ -54,59 +57,39 @@ public class EFMInventoryScreen extends Screen {
             384,
             6
         );
-        if(dragging && dragged!=null){
+        if(context.dragging && context.dragged!=null){
             guiGraphics.pose().pushPose();
             guiGraphics.pose().scale(2,2,1);
-            guiGraphics.renderFakeItem(dragged.getStack(),mouseX+8/2,mouseY+8/2);
+            guiGraphics.renderFakeItem(context.dragged.getStack(),mouseX/2-8,mouseY/2-8);
             guiGraphics.pose().popPose();
         }
-        head.render(guiGraphics, mouseX, mouseY);
-        chest.render(guiGraphics, mouseX, mouseY);
+        for(org.styly.efm.inventory.Component component:components){
+            component.render(guiGraphics,mouseX,mouseY,0);
+        }
+
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-           if(head.over(mouseX,mouseY)&&!dragging){
-               dragged = head.item;
-               head.item=new InventoryItem(ItemStack.EMPTY,0,0,false);
-                from = head;
-               dragging=true;
-           } else if(chest.over(mouseX,mouseY)&&!dragging){
-
-                    dragged = chest.item;
-                    chest.item=new InventoryItem(ItemStack.EMPTY,0,0,false);
-                    from = chest;
-                    dragging=true;
-
-            }
+        for(org.styly.efm.inventory.Component component:components){
+            component.handleClick(mouseX,mouseY,button,context);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && dragging) {
-            if(head.over(mouseX,mouseY)){
-                if(!head.item.getItemStack().isEmpty()){
-                    from.item=head.item;
-                }
-                dragging=false;
-                head.item=dragged;
-                dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
-            } else if (chest.over(mouseX,mouseY)) {
-                if(!chest.item.getItemStack().isEmpty()){
-                    from.item=chest.item;
-                }
-                dragging=false;
-                chest.item=dragged;
-                dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
-            } else {
-                dragging=false;
-                from.item=dragged;
-                dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
-            }
+        boolean ret =false;
+        for(org.styly.efm.inventory.Component component:components){
+            if(component.handleRelease(mouseX,mouseY,button,context))ret=true;
         }
+        if(context.dragging&&!ret){
+            context.from.item=context.dragged;
+            context.dragging=false;
+            context.dragged=null;
+            context.from=null;
+        }
+        if (ret) return true;
         return super.mouseReleased(mouseX, mouseY, button);
     }
 }

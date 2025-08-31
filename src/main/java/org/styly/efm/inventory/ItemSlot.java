@@ -5,11 +5,27 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import org.styly.efm.registries.ModItems;
 
-public class ItemSlot {
+public class ItemSlot implements Component{
+    int posX;
+    int posY;
     int slotSize = 64;
-    InventoryItem item = new InventoryItem(ModItems.NVG_WP.toStack(), 2, 2, false);
+    InventoryItem item = new InventoryItem(
+        ModItems.NVG_WP.toStack(),
+        2,
+        2,
+        false
+    );
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, int posX, int posY) {
+    public ItemSlot(int posX,int posY){
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    public void render(
+        GuiGraphics guiGraphics,
+        int mouseX,
+        int mouseY
+    ) {
         int halfSize = slotSize / 2;
 
         int x1 = posX - halfSize;
@@ -39,10 +55,10 @@ public class ItemSlot {
 
             guiGraphics.renderItem(item.getItemStack(), scaledX, scaledY);
             guiGraphics.renderItemDecorations(
-                    Minecraft.getInstance().font,
-                    item.getItemStack(),
-                    scaledX,
-                    scaledY
+                Minecraft.getInstance().font,
+                item.getItemStack(),
+                scaledX,
+                scaledY
             );
 
             guiGraphics.pose().popPose();
@@ -50,10 +66,10 @@ public class ItemSlot {
 
         // Slot border (solid white, 1px thick)
         int borderColor = 0xFFFFFFFF;
-        guiGraphics.fill(x1, y1, x2, y1 + 1, borderColor);     // top
-        guiGraphics.fill(x1, y2 - 1, x2, y2, borderColor);     // bottom
-        guiGraphics.fill(x1, y1, x1 + 1, y2, borderColor);     // left
-        guiGraphics.fill(x2 - 1, y1, x2, y2, borderColor);     // right
+        guiGraphics.fill(x1, y1, x2, y1 + 1, borderColor); // top
+        guiGraphics.fill(x1, y2 - 1, x2, y2, borderColor); // bottom
+        guiGraphics.fill(x1, y1, x1 + 1, y2, borderColor); // left
+        guiGraphics.fill(x2 - 1, y1, x2, y2, borderColor); // right
 
         // Hover highlight
         if (mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2) {
@@ -62,4 +78,16 @@ public class ItemSlot {
         }
     }
 
+    public boolean over(double mouseX,double mouseY) {
+        int halfSize = slotSize / 2;
+
+        int x1 = posX - halfSize;
+        int y1 = posY - halfSize;
+        int x2 = posX + halfSize;
+        int y2 = posY + halfSize;
+        if (mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
  * Designed with simplicity and EFT-like grid inventory in mind.
  */
 public class EFMInventory {
-    public void onRender(){
 
+    public void onRender() {
     }
 }

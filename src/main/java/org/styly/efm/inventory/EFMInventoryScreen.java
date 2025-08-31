@@ -92,4 +92,9 @@ public class EFMInventoryScreen extends Screen {
         if (ret) return true;
         return super.mouseReleased(mouseX, mouseY, button);
     }
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return false;
+    }
+
 }

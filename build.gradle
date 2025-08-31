@@ -137,6 +137,7 @@ dependencies {
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
     implementation "team.lodestar.lodestone:lodestone:${lodestone_version}"
     implementation "maven.modrinth:geckolib:${geckolib_version}"
+    implementation "curse.maven:pointblank-jelly-1239440:6949290"
 //    implementation "maven.modrinth:owo-lib:${owo_lib}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

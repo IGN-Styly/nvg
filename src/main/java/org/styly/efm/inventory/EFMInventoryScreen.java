@@ -89,7 +89,7 @@ public class EFMInventoryScreen extends Screen {
 
         for(org.styly.efm.inventory.Component component :components){
             if (component instanceof ScrollableComponent comp) {
-                if(comp.mouseScrolled(mouseX,mouseY,scrollX,scrollY))ret=true;
+                if(comp.mouseScrolled(mouseX,mouseY,scrollX,scrollY,0))ret=true;
             }
         }
     return ret;

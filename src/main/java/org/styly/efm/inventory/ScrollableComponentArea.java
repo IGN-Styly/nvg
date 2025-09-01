@@ -52,8 +52,8 @@ public class ScrollableComponentArea implements Component, ScrollableComponent {
         return ret;
     }
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if(over(mouseX,mouseY,0)){
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY,int offsetY) {
+        if(over(mouseX,mouseY,offsetY)){
             this.offsetY=Math.clamp((int) (scrollY*4)+this.offsetY,lowerLim,upperLim);
         return true;}
         return false;

@@ -1,25 +1,16 @@
 package org.styly.efm.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import org.lwjgl.glfw.GLFW;
-import org.styly.efm.player.EquipmentSlot;
 import org.styly.efm.player.Player2DRenderer;
+
+import static org.styly.efm.EFM.LOGGER;
 
 /**
  * Screen for displaying and interacting with an EFM inventory.
@@ -34,7 +25,7 @@ public class EFMInventoryScreen extends Screen {
         super(Component.literal(""));
         ItemSlot head = new ItemSlot(32, 32);
         ItemSlot chest = new ItemSlot(32, 128);
-        ScrollableArea area = new ScrollableArea(new ItemSlot(128, 32));
+        ScrollableComponentArea area = new ScrollableComponentArea(new ItemSlot(128, 32));
         chest.item.setItemStack(Items.DIAMOND_SWORD.getDefaultInstance());
         components.add(head);
         components.add(chest);
@@ -72,7 +63,7 @@ public class EFMInventoryScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         for(org.styly.efm.inventory.Component component:components){
-            component.handleClick(mouseX,mouseY,button,context);
+            component.handleClick(mouseX,mouseY,0,button,context);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -81,7 +72,7 @@ public class EFMInventoryScreen extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         boolean ret =false;
         for(org.styly.efm.inventory.Component component:components){
-            if(component.handleRelease(mouseX,mouseY,button,context))ret=true;
+            if(component.handleRelease(mouseX,mouseY,0,button,context))ret=true;
         }
         if(context.dragging&&!ret){
             context.from.item=context.dragged;
@@ -94,7 +85,14 @@ public class EFMInventoryScreen extends Screen {
     }
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        return false;
+        boolean ret = false;
+
+        for(org.styly.efm.inventory.Component component :components){
+            if (component instanceof ScrollableComponent comp) {
+                if(comp.mouseScrolled(mouseX,mouseY,scrollX,scrollY))ret=true;
+            }
+        }
+    return ret;
     }
 
 }

@@ -31,9 +31,9 @@ public class ItemSlot implements Component{
         int halfSize = slotSize / 2;
 
         int x1 = posX - halfSize;
-        int y1 = posY - halfSize;
+        int y1 = posY - halfSize-offsetY;
         int x2 = posX + halfSize;
-        int y2 = posY + halfSize;
+        int y2 = posY + halfSize-offsetY;
 
         // Slot background (semi-transparent dark gray)
         int bgColor = 0x88000000;
@@ -49,7 +49,7 @@ public class ItemSlot implements Component{
 
             // Scale factor for item
             float scale = availableSize / 16.0f;
-            guiGraphics.pose().translate(posX,posY,0);
+            guiGraphics.pose().translate(posX,posY-offsetY,0);
             guiGraphics.pose().scale(scale, scale, 1.0f);
 
 
@@ -78,22 +78,18 @@ public class ItemSlot implements Component{
         }
     }
 
-    public boolean over(double mouseX,double mouseY) {
+    public boolean over(double mouseX,double mouseY,int offsetY) {
         int halfSize = slotSize / 2;
-
         int x1 = posX - halfSize;
-        int y1 = posY - halfSize;
+        int y1 = posY - halfSize-offsetY;
         int x2 = posX + halfSize;
-        int y2 = posY + halfSize;
-        if (mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2) {
-            return true;
-        }
-        return false;
+        int y2 = posY + halfSize-offsetY;
+        return mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2;
     }
 
     @Override
-    public boolean handleClick(double mouseX, double mouseY, int button,DragContext ctx) {
-        if(over(mouseX,mouseY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&!this.item.getItemStack().isEmpty()){
+    public boolean handleClick(double mouseX, double mouseY,int offsetY, int button,DragContext ctx) {
+        if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&!this.item.getItemStack().isEmpty()){
             ctx.from=this;
             ctx.dragging=true;
             ctx.dragged=this.item;
@@ -104,8 +100,8 @@ public class ItemSlot implements Component{
     }
 
     @Override
-    public boolean handleRelease(double mouseX, double mouseY, int button, DragContext ctx) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY)) {
+    public boolean handleRelease(double mouseX, double mouseY,int offsetY, int button, DragContext ctx) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
 
                 if(!item.getItemStack().isEmpty()){
                     ctx.from.item=item;

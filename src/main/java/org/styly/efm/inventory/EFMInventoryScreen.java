@@ -25,11 +25,13 @@ public class EFMInventoryScreen extends Screen {
         super(Component.literal(""));
         ItemSlot head = new ItemSlot(32, 32);
         ItemSlot chest = new ItemSlot(32, 128);
+        ItemGridArea grid = new ItemGridArea(128,128);
         ScrollableComponentArea area = new ScrollableComponentArea(new ItemSlot(128, 32));
         chest.item.setItemStack(Items.DIAMOND_SWORD.getDefaultInstance());
         components.add(head);
         components.add(chest);
         components.add(area);
+        components.add(grid);
     }
 
     @Override

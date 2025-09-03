@@ -83,15 +83,15 @@ public class ItemGridArea implements Component,ItemContainer{
         int y2 = y + SIZE*container.getRows()-offsetY;
         return mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2;
     }
-    public Vector2i cursorToGridPos(double mouseX, double mouseY){
+    public Vector2i cursorToGridPos(double mouseX, double mouseY,int offsetY){
         double localX = mouseX-x;
-        double localY=mouseY-y;
+        double localY=mouseY-y-offsetY;
         Vector2i pos = new Vector2i((int)localX/SIZE,(int)localY/SIZE);
         return pos;
     }
     @Override
     public boolean handleClick(double mouseX, double mouseY, int offsetY, int button, DragContext ctx) {
-        Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
+        Vector2i gridpos = cursorToGridPos(mouseX,mouseY,offsetY);
         if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&this.container.getItemAt(gridpos.y,gridpos.x)!=null){
             ctx.from=this;
             ctx.originContext = gridpos;
@@ -105,7 +105,7 @@ public class ItemGridArea implements Component,ItemContainer{
 
     @Override
     public boolean handleRelease(double mouseX, double mouseY,int offsetY, int button, DragContext ctx) {
-        Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
+        Vector2i gridpos = cursorToGridPos(mouseX,mouseY,offsetY);
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
             EFM.LOGGER.info("{}",gridpos);
 

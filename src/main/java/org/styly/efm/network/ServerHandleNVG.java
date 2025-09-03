@@ -13,7 +13,6 @@ import net.neoforged.neoforge.network.handling.MainThreadPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.styly.efm.components.nvgtoggle;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItems;
 import org.styly.efm.registries.ModSounds;
 
 import java.util.Objects;
@@ -28,7 +27,7 @@ public class ServerHandleNVG {
         if (player.getItemBySlot(EquipmentSlot.HEAD).has(DataCompReg.NVG_TOGGLE)) {
             ItemStack nvg = player.getItemBySlot(EquipmentSlot.HEAD);
             Boolean status = Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle();
-            nvg.set(DataCompReg.NVG_TOGGLE, new nvgtoggle(!status,nvg.get(DataCompReg.NVG_TOGGLE).id(),nvg.get(DataCompReg.NVG_TOGGLE).overlay()));
+            nvg.set(DataCompReg.NVG_TOGGLE, new nvgtoggle(!status, nvg.get(DataCompReg.NVG_TOGGLE).id(), nvg.get(DataCompReg.NVG_TOGGLE).overlay()));
             if (!status) {
                 world.playSound(null, player.blockPosition(), ModSounds.NVG_ON.get(), SoundSource.PLAYERS, 1, 1);
             }

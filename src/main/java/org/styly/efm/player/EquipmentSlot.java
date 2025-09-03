@@ -10,60 +10,23 @@ import net.minecraft.world.item.Items;
  */
 public class EquipmentSlot {
 
-    /**
-     * Different types of equipment slots available.
-     */
-    public enum SlotType {
-        PRIMARY_WEAPON("Primary", 48, 16),
-        SECONDARY_WEAPON("Secondary", 32, 16),
-        HOLSTER("Holster", 16, 16),
-        BODY_ARMOR("Body Armor", 32, 32),
-        HEADWEAR("Headwear", 16, 16),
-        TACTICAL_RIG_POCKET("Rig Pocket", 16, 16),
-        BACKPACK("Backpack", 32, 32);
-
-        private final String displayName;
-        private final int defaultWidth;
-        private final int defaultHeight;
-
-        SlotType(String displayName, int defaultWidth, int defaultHeight) {
-            this.displayName = displayName;
-            this.defaultWidth = defaultWidth;
-            this.defaultHeight = defaultHeight;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public int getDefaultWidth() {
-            return defaultWidth;
-        }
-
-        public int getDefaultHeight() {
-            return defaultHeight;
-        }
-    }
-
+    // Visual constants
+    private static final int SLOT_BORDER_COLOR = 0xFF555555;
+    private static final int SLOT_BACKGROUND_COLOR = 0xFF222222;
+    private static final int SLOT_HOVER_COLOR = 0xFF777777;
+    private static final int SLOT_OCCUPIED_COLOR = 0xFF333333;
     // Slot properties
     private final SlotType type;
     private ItemStack item;
     private int x, y, width, height;
     private boolean isHovered;
     private boolean isVisible;
-
-    // Visual constants
-    private static final int SLOT_BORDER_COLOR = 0xFF555555;
-    private static final int SLOT_BACKGROUND_COLOR = 0xFF222222;
-    private static final int SLOT_HOVER_COLOR = 0xFF777777;
-    private static final int SLOT_OCCUPIED_COLOR = 0xFF333333;
-
     /**
      * Creates a new equipment slot.
      *
      * @param type The type of equipment this slot accepts
-     * @param x Screen x position
-     * @param y Screen y position
+     * @param x    Screen x position
+     * @param y    Screen y position
      */
     public EquipmentSlot(SlotType type, int x, int y) {
         this.type = type;
@@ -98,10 +61,10 @@ public class EquipmentSlot {
 
         // Update hover state
         isHovered =
-            mouseX >= x &&
-            mouseX < x + width &&
-            mouseY >= y &&
-            mouseY < y + height;
+                mouseX >= x &&
+                        mouseX < x + width &&
+                        mouseY >= y &&
+                        mouseY < y + height;
 
         // Choose background color based on state
         int backgroundColor = SLOT_BACKGROUND_COLOR;
@@ -118,19 +81,19 @@ public class EquipmentSlot {
         // Draw slot border
         guiGraphics.fill(x - 1, y - 1, x + width + 1, y, SLOT_BORDER_COLOR); // Top
         guiGraphics.fill(
-            x - 1,
-            y + height,
-            x + width + 1,
-            y + height + 1,
-            SLOT_BORDER_COLOR
+                x - 1,
+                y + height,
+                x + width + 1,
+                y + height + 1,
+                SLOT_BORDER_COLOR
         ); // Bottom
         guiGraphics.fill(x - 1, y, x, y + height, SLOT_BORDER_COLOR); // Left
         guiGraphics.fill(
-            x + width,
-            y,
-            x + width + 1,
-            y + height,
-            SLOT_BORDER_COLOR
+                x + width,
+                y,
+                x + width + 1,
+                y + height,
+                SLOT_BORDER_COLOR
         ); // Right
 
         // Render item if present
@@ -141,10 +104,10 @@ public class EquipmentSlot {
 
             guiGraphics.renderItem(item, itemX, itemY);
             guiGraphics.renderItemDecorations(
-                net.minecraft.client.Minecraft.getInstance().font,
-                item,
-                itemX,
-                itemY
+                    net.minecraft.client.Minecraft.getInstance().font,
+                    item,
+                    itemX,
+                    itemY
             );
         }
 
@@ -154,18 +117,18 @@ public class EquipmentSlot {
             String indicator = getSlotIndicator();
             if (!indicator.isEmpty()) {
                 int textWidth =
-                    net.minecraft.client.Minecraft.getInstance().font.width(
-                        indicator
-                    );
+                        net.minecraft.client.Minecraft.getInstance().font.width(
+                                indicator
+                        );
                 int textX = x + (width - textWidth) / 2;
                 int textY = y + height + 2;
 
                 guiGraphics.drawString(
-                    net.minecraft.client.Minecraft.getInstance().font,
-                    indicator,
-                    textX,
-                    textY,
-                    0xFF888888
+                        net.minecraft.client.Minecraft.getInstance().font,
+                        indicator,
+                        textX,
+                        textY,
+                        0xFF888888
                 );
             }
         }
@@ -227,97 +190,97 @@ public class EquipmentSlot {
     private boolean isPrimaryWeapon(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getItem() == Items.DIAMOND_SWORD ||
-            item.getItem() == Items.IRON_SWORD ||
-            item.getItem() == Items.GOLDEN_SWORD ||
-            item.getItem() == Items.STONE_SWORD ||
-            item.getItem() == Items.WOODEN_SWORD ||
-            item.getItem() == Items.NETHERITE_SWORD ||
-            item.getItem() == Items.BOW ||
-            item.getItem() == Items.CROSSBOW ||
-            itemName.contains("rifle") ||
-            itemName.contains("assault") ||
-            itemName.contains("sniper")
+                item.getItem() == Items.DIAMOND_SWORD ||
+                        item.getItem() == Items.IRON_SWORD ||
+                        item.getItem() == Items.GOLDEN_SWORD ||
+                        item.getItem() == Items.STONE_SWORD ||
+                        item.getItem() == Items.WOODEN_SWORD ||
+                        item.getItem() == Items.NETHERITE_SWORD ||
+                        item.getItem() == Items.BOW ||
+                        item.getItem() == Items.CROSSBOW ||
+                        itemName.contains("rifle") ||
+                        itemName.contains("assault") ||
+                        itemName.contains("sniper")
         );
     }
 
     private boolean isSecondaryWeapon(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getItem() == Items.BOW ||
-            item.getItem() == Items.CROSSBOW ||
-            item.getItem() == Items.DIAMOND_SWORD ||
-            item.getItem() == Items.IRON_SWORD ||
-            itemName.contains("pistol") ||
-            itemName.contains("smg") ||
-            itemName.contains("carbine")
+                item.getItem() == Items.BOW ||
+                        item.getItem() == Items.CROSSBOW ||
+                        item.getItem() == Items.DIAMOND_SWORD ||
+                        item.getItem() == Items.IRON_SWORD ||
+                        itemName.contains("pistol") ||
+                        itemName.contains("smg") ||
+                        itemName.contains("carbine")
         );
     }
 
     private boolean isHolsterWeapon(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            itemName.contains("pistol") ||
-            itemName.contains("revolver") ||
-            item.getItem() == Items.FLINT_AND_STEEL
+                itemName.contains("pistol") ||
+                        itemName.contains("revolver") ||
+                        item.getItem() == Items.FLINT_AND_STEEL
         ); // Example small weapon
     }
 
     private boolean isBodyArmor(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getItem() == Items.IRON_CHESTPLATE ||
-            item.getItem() == Items.DIAMOND_CHESTPLATE ||
-            item.getItem() == Items.LEATHER_CHESTPLATE ||
-            item.getItem() == Items.GOLDEN_CHESTPLATE ||
-            item.getItem() == Items.CHAINMAIL_CHESTPLATE ||
-            item.getItem() == Items.NETHERITE_CHESTPLATE ||
-            itemName.contains("vest") ||
-            itemName.contains("armor") ||
-            itemName.contains("chestplate")
+                item.getItem() == Items.IRON_CHESTPLATE ||
+                        item.getItem() == Items.DIAMOND_CHESTPLATE ||
+                        item.getItem() == Items.LEATHER_CHESTPLATE ||
+                        item.getItem() == Items.GOLDEN_CHESTPLATE ||
+                        item.getItem() == Items.CHAINMAIL_CHESTPLATE ||
+                        item.getItem() == Items.NETHERITE_CHESTPLATE ||
+                        itemName.contains("vest") ||
+                        itemName.contains("armor") ||
+                        itemName.contains("chestplate")
         );
     }
 
     private boolean isHeadwear(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getItem() == Items.IRON_HELMET ||
-            item.getItem() == Items.DIAMOND_HELMET ||
-            item.getItem() == Items.LEATHER_HELMET ||
-            item.getItem() == Items.GOLDEN_HELMET ||
-            item.getItem() == Items.CHAINMAIL_HELMET ||
-            item.getItem() == Items.NETHERITE_HELMET ||
-            item.getItem() == Items.TURTLE_HELMET ||
-            itemName.contains("helmet") ||
-            itemName.contains("hat") ||
-            itemName.contains("cap")
+                item.getItem() == Items.IRON_HELMET ||
+                        item.getItem() == Items.DIAMOND_HELMET ||
+                        item.getItem() == Items.LEATHER_HELMET ||
+                        item.getItem() == Items.GOLDEN_HELMET ||
+                        item.getItem() == Items.CHAINMAIL_HELMET ||
+                        item.getItem() == Items.NETHERITE_HELMET ||
+                        item.getItem() == Items.TURTLE_HELMET ||
+                        itemName.contains("helmet") ||
+                        itemName.contains("hat") ||
+                        itemName.contains("cap")
         );
     }
 
     private boolean isSmallItem(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getMaxStackSize() > 1 ||
-            item.getItem() == Items.COMPASS ||
-            item.getItem() == Items.CLOCK ||
-            item.getItem() == Items.MAP ||
-            item.getItem() == Items.SPYGLASS ||
-            itemName.contains("grenade") ||
-            itemName.contains("magazine") ||
-            itemName.contains("ammo") ||
-            itemName.contains("bandage") ||
-            itemName.contains("medkit")
+                item.getMaxStackSize() > 1 ||
+                        item.getItem() == Items.COMPASS ||
+                        item.getItem() == Items.CLOCK ||
+                        item.getItem() == Items.MAP ||
+                        item.getItem() == Items.SPYGLASS ||
+                        itemName.contains("grenade") ||
+                        itemName.contains("magazine") ||
+                        itemName.contains("ammo") ||
+                        itemName.contains("bandage") ||
+                        itemName.contains("medkit")
         );
     }
 
     private boolean isBackpack(ItemStack item) {
         String itemName = item.getItem().toString().toLowerCase();
         return (
-            item.getItem() == Items.BUNDLE ||
-            item.getItem() == Items.SHULKER_BOX ||
-            itemName.contains("backpack") ||
-            itemName.contains("bag") ||
-            itemName.contains("satchel")
+                item.getItem() == Items.BUNDLE ||
+                        item.getItem() == Items.SHULKER_BOX ||
+                        itemName.contains("backpack") ||
+                        itemName.contains("bag") ||
+                        itemName.contains("satchel")
         );
     }
 
@@ -349,10 +312,10 @@ public class EquipmentSlot {
      */
     public boolean isMouseOver(int mouseX, int mouseY) {
         return (
-            mouseX >= x &&
-            mouseX < x + width &&
-            mouseY >= y &&
-            mouseY < y + height
+                mouseX >= x &&
+                        mouseX < x + width &&
+                        mouseY >= y &&
+                        mouseY < y + height
         );
     }
 
@@ -416,5 +379,40 @@ public class EquipmentSlot {
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    /**
+     * Different types of equipment slots available.
+     */
+    public enum SlotType {
+        PRIMARY_WEAPON("Primary", 48, 16),
+        SECONDARY_WEAPON("Secondary", 32, 16),
+        HOLSTER("Holster", 16, 16),
+        BODY_ARMOR("Body Armor", 32, 32),
+        HEADWEAR("Headwear", 16, 16),
+        TACTICAL_RIG_POCKET("Rig Pocket", 16, 16),
+        BACKPACK("Backpack", 32, 32);
+
+        private final String displayName;
+        private final int defaultWidth;
+        private final int defaultHeight;
+
+        SlotType(String displayName, int defaultWidth, int defaultHeight) {
+            this.displayName = displayName;
+            this.defaultWidth = defaultWidth;
+            this.defaultHeight = defaultHeight;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public int getDefaultWidth() {
+            return defaultWidth;
+        }
+
+        public int getDefaultHeight() {
+            return defaultHeight;
+        }
     }
 }

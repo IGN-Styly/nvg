@@ -28,13 +28,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class gpnvg extends ArmorItem implements GeoItem {
-    private  boolean variant;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final boolean variant;
     private Boolean toggle = false;
 
     public gpnvg(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties, boolean variant) {
         super(pMaterial, pType, pProperties);
-        this.variant=variant;
+        this.variant = variant;
     }
 
 
@@ -43,18 +43,20 @@ public class gpnvg extends ArmorItem implements GeoItem {
         consumer.accept(new GeoRenderProvider() {
             private GeoArmorRenderer<?> renderer;
             private NVGItemRenderer renderer2;
+
             @Override
             public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
                 if (this.renderer == null)
-                    if(variant) this.renderer= new GPNVG_Renderer_ST();
+                    if (variant) this.renderer = new GPNVG_Renderer_ST();
                     else this.renderer = new GPNVGRenderer();
 
                 return this.renderer;
             }
+
             @Override
             public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 if (this.renderer2 == null)
-                    if(variant) this.renderer2= new NVGItemRenderer();
+                    if (variant) this.renderer2 = new NVGItemRenderer();
                     else this.renderer2 = new NVGItemRenderer();
 
 

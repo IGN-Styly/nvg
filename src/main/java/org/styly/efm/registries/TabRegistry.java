@@ -10,9 +10,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import static org.styly.efm.EFM.MODID;
 
 public class TabRegistry {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB,MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final DeferredHolder<CreativeModeTab,CreativeModeTab> EFM = CREATIVE_TABS.register("efm",()-> CreativeModeTab.builder().title(Component.translatable("itemGroup.efm")).icon(()->ModItems.NVG_WP.get().getDefaultInstance()).displayItems(((parameters, output) ->{
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EFM = CREATIVE_TABS.register("efm", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.efm")).icon(() -> ModItems.NVG_WP.get().getDefaultInstance()).displayItems(((parameters, output) -> {
         output.accept(ModItems.SMALL_CRATE_ITEM);
         output.accept(ModItems.NVG_GP);
         output.accept(ModItems.NVG_GP_SP);

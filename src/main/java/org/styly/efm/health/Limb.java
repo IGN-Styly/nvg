@@ -9,8 +9,13 @@ public class Limb {
         this.currentHealth = maxHealth;
     }
 
-    public int getMaxHealth() { return maxHealth; }
-    public int getCurrentHealth() { return currentHealth; }
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
 
     public void damage(int amount) {
         currentHealth = Math.max(0, currentHealth - amount);

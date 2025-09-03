@@ -1,6 +1,5 @@
 package org.styly.efm.rederer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import team.lodestar.lodestone.systems.postprocess.PostProcessor;

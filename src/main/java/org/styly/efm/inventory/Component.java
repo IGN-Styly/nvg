@@ -9,7 +9,10 @@ public interface Component {
             int mouseY,
             int offsetY
     );
-    boolean over(double mouseX, double mouseY,int offsetY);
-    boolean handleClick(double mouseX,double mouseY,int offsetY,int button,DragContext ctx);
-    boolean handleRelease(double mouseX,double mouseY,int offsetY,int button,DragContext ctx);
+
+    boolean over(double mouseX, double mouseY, int offsetY);
+
+    boolean handleClick(double mouseX, double mouseY, int offsetY, int button, DragContext ctx);
+
+    boolean handleRelease(double mouseX, double mouseY, int offsetY, int button, DragContext ctx);
 }

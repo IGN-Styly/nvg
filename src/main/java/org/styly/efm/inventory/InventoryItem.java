@@ -10,21 +10,21 @@ public class InventoryItem {
 
     private int width, height;
     private ItemStack stack;
-    private boolean rotatable;
+    private final boolean rotatable;
 
     /**
      * Creates a new inventory item with the specified properties.
      *
-     * @param stack The Minecraft ItemStack associated with this inventory item
-     * @param width Width of the item in grid cells
-     * @param height Height of the item in grid cells
+     * @param stack     The Minecraft ItemStack associated with this inventory item
+     * @param width     Width of the item in grid cells
+     * @param height    Height of the item in grid cells
      * @param rotatable Whether the item can be rotated
      */
     public InventoryItem(
-        ItemStack stack,
-        int width,
-        int height,
-        boolean rotatable
+            ItemStack stack,
+            int width,
+            int height,
+            boolean rotatable
     ) {
         this.stack = stack != null ? stack : ItemStack.EMPTY;
         this.width = Math.max(1, width);
@@ -40,12 +40,11 @@ public class InventoryItem {
      */
     public boolean rotate() {
         var x = this.height;
-        this.height=width;
-        this.width=x;
+        this.height = width;
+        this.width = x;
 
         return true;
     }
-
 
 
     /**

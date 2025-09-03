@@ -16,7 +16,6 @@ import org.styly.efm.network.ToggleRecord;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItems;
 
 import java.util.Objects;
 
@@ -28,21 +27,21 @@ public class ClientTick {
     public static void onClientTick(PlayerTickEvent.Post event) {
         Player entity = event.getEntity();
         ItemStack nvg = entity.getItemBySlot(EquipmentSlot.HEAD);
-        if (Minecraft.getInstance().options.getCameraType() != FP&&nvg.has(DataCompReg.NVG_TOGGLE)) {
+        if (Minecraft.getInstance().options.getCameraType() != FP && nvg.has(DataCompReg.NVG_TOGGLE)) {
             nvgtoggle tk = nvg.get(DataCompReg.NVG_TOGGLE);
-            if (tk.id()==0&&tk.toggle()) {
+            if (tk.id() == 0 && tk.toggle()) {
                 PacketDistributor.sendToServer(new ToggleRecord(0, 0));
                 GPNVG_POST.INSTANCE.setActive(!Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
             }
-            if (tk.id()==1&&tk.toggle()) {
+            if (tk.id() == 1 && tk.toggle()) {
                 PacketDistributor.sendToServer(new ToggleRecord(0, 0));
                 WPNVG_POST.INSTANCE.setActive(!Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
             }
         }
-        if(nvg.has(DataCompReg.NVG_TOGGLE)){
-        GPNVG_POST.INSTANCE.setActive(nvg.get(DataCompReg.NVG_TOGGLE).id()==0 && Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
-        WPNVG_POST.INSTANCE.setActive(nvg.get(DataCompReg.NVG_TOGGLE).id()==1 && Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
-    } else{
+        if (nvg.has(DataCompReg.NVG_TOGGLE)) {
+            GPNVG_POST.INSTANCE.setActive(nvg.get(DataCompReg.NVG_TOGGLE).id() == 0 && Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
+            WPNVG_POST.INSTANCE.setActive(nvg.get(DataCompReg.NVG_TOGGLE).id() == 1 && Objects.requireNonNull(nvg.get(DataCompReg.NVG_TOGGLE)).toggle());
+        } else {
             GPNVG_POST.INSTANCE.setActive(false);
             WPNVG_POST.INSTANCE.setActive(false);
 

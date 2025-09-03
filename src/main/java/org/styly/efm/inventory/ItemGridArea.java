@@ -1,15 +1,15 @@
 package org.styly.efm.inventory;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.joml.Vector2d;
-import org.joml.Vector2dc;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.styly.efm.EFM;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemGridArea implements Component, ItemContainer {
 
@@ -20,16 +20,16 @@ public class ItemGridArea implements Component, ItemContainer {
 
     public ItemGridArea(int x, int y) {
         InventoryItem demo = new InventoryItem(
-            Items.DIAMOND_SWORD.getDefaultInstance(),
-            1,
-            3,
-            true
+                Items.DIAMOND_SWORD.getDefaultInstance(),
+                1,
+                3,
+                true
         );
         InventoryItem demo2 = new InventoryItem(
-            Items.DIAMOND_HELMET.getDefaultInstance(),
-            3,
-            3,
-            true
+                Items.DIAMOND_HELMET.getDefaultInstance(),
+                3,
+                3,
+                true
         );
         container.placeItem(demo, 0, 0);
         container.placeItem(demo2, 0, 1);
@@ -39,17 +39,17 @@ public class ItemGridArea implements Component, ItemContainer {
 
     @Override
     public void render(
-        GuiGraphics guiGraphics,
-        int mouseX,
-        int mouseY,
-        int offsetY
+            GuiGraphics guiGraphics,
+            int mouseX,
+            int mouseY,
+            int offsetY
     ) {
         HashMap<InventoryItem, Vector2d> metadata = new HashMap<>();
         for (int n = 0; n < container.getRows(); n++) {
             for (int k = 0; k < container.getCols(); k++) {
                 if (
-                    !metadata.containsKey(container.getItemAt(n, k)) &&
-                    container.getItemAt(n, k) != null
+                        !metadata.containsKey(container.getItemAt(n, k)) &&
+                                container.getItemAt(n, k) != null
                 ) {
                     metadata.put(container.getItemAt(n, k), new Vector2d(k, n));
                 }
@@ -76,12 +76,12 @@ public class ItemGridArea implements Component, ItemContainer {
             int hoverColor = 0x44FFFFFF;
             float padding = 4f;
             float availableSize =
-                SIZE *
-                    Math.max(
-                        Math.min(k.getKey().getHeight(), k.getKey().getWidth()),
-                        1
-                    ) -
-                (padding * 2);
+                    SIZE *
+                            Math.max(
+                                    Math.min(k.getKey().getHeight(), k.getKey().getWidth()),
+                                    1
+                            ) -
+                            (padding * 2);
 
             // Scale factor for item
             float scale = availableSize / 16.0f;
@@ -90,16 +90,16 @@ public class ItemGridArea implements Component, ItemContainer {
             int y1 = (int) (y + cords.y * SIZE - offsetY);
             int x2 = (int) (x + (cords.x + k.getKey().getWidth()) * SIZE);
             int y2 = (int) (y +
-                (cords.y + k.getKey().getHeight()) * SIZE -
-                offsetY);
+                    (cords.y + k.getKey().getHeight()) * SIZE -
+                    offsetY);
             guiGraphics.pose().pushPose();
             guiGraphics
-                .pose()
-                .translate(
-                    x1 + (float) (x2 - x1) / 2,
-                    y1 + (float) (y2 - y1) / 2,
-                    0
-                );
+                    .pose()
+                    .translate(
+                            x1 + (float) (x2 - x1) / 2,
+                            y1 + (float) (y2 - y1) / 2,
+                            0
+                    );
             guiGraphics.pose().scale(scale, scale, 1.0f);
             guiGraphics.renderFakeItem(k.getKey().getStack(), -8, -8);
             guiGraphics.pose().popPose();
@@ -127,29 +127,29 @@ public class ItemGridArea implements Component, ItemContainer {
 
     @Override
     public boolean handleClick(
-        double mouseX,
-        double mouseY,
-        int offsetY,
-        int button,
-        DragContext ctx
+            double mouseX,
+            double mouseY,
+            int offsetY,
+            int button,
+            DragContext ctx
     ) {
         Vector2i gridpos = cursorToGridPos(mouseX, mouseY, offsetY);
         if (
-            over(mouseX, mouseY, offsetY) &&
-            button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
-            this.container.getItemAt(gridpos.y, gridpos.x) != null
+                over(mouseX, mouseY, offsetY) &&
+                        button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
+                        this.container.getItemAt(gridpos.y, gridpos.x) != null
         ) {
             EFM.LOGGER.info(
-                "Clicked at {}, item: {}",
-                gridpos,
-                this.container.getItemAt(gridpos.y, gridpos.x)
+                    "Clicked at {}, item: {}",
+                    gridpos,
+                    this.container.getItemAt(gridpos.y, gridpos.x)
             );
             ctx.from = this;
             ctx.originContext = gridpos;
             ctx.dragging = true;
             ctx.dragged = this.container.getItemAt(gridpos.y, gridpos.x);
             container.removeItem(
-                this.container.getItemAt(gridpos.y, gridpos.x)
+                    this.container.getItemAt(gridpos.y, gridpos.x)
             );
             return true;
         }
@@ -158,18 +158,18 @@ public class ItemGridArea implements Component, ItemContainer {
 
     @Override
     public boolean handleRelease(
-        double mouseX,
-        double mouseY,
-        int offsetY,
-        int button,
-        DragContext ctx
+            double mouseX,
+            double mouseY,
+            int offsetY,
+            int button,
+            DragContext ctx
     ) {
         Vector2i gridpos = cursorToGridPos(mouseX, mouseY, offsetY);
         if (
-            button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
-            ctx.dragging &&
-            over(mouseX, mouseY, offsetY) &&
-            container.canPlaceItem(ctx.dragged, gridpos.y, gridpos.x)
+                button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
+                        ctx.dragging &&
+                        over(mouseX, mouseY, offsetY) &&
+                        container.canPlaceItem(ctx.dragged, gridpos.y, gridpos.x)
         ) {
             EFM.LOGGER.info("{}", gridpos);
 
@@ -179,8 +179,8 @@ public class ItemGridArea implements Component, ItemContainer {
             // If there's an item at the target position, try to return it to the origin
             if (this.container.getItemAt(gridpos.y, gridpos.x) != null) {
                 InventoryItem existingItem = this.container.getItemAt(
-                    gridpos.y,
-                    gridpos.x
+                        gridpos.y,
+                        gridpos.x
                 );
                 try {
                     // Try to return the existing item to its origin
@@ -188,7 +188,7 @@ public class ItemGridArea implements Component, ItemContainer {
                 } catch (RuntimeException e) {
                     // If the item can't be returned, cancel the entire operation
                     EFM.LOGGER.info(
-                        "Cancelled item switch - couldn't return item to origin"
+                            "Cancelled item switch - couldn't return item to origin"
                     );
                     return false;
                 }
@@ -214,7 +214,7 @@ public class ItemGridArea implements Component, ItemContainer {
             // If the item can't fit at the original position, throw an exception
             // to cancel the dragging operation
             throw new RuntimeException(
-                "Cannot return item to original position"
+                    "Cannot return item to original position"
             );
         } else {
             this.container.placeItem(item, ctx.y, ctx.x);

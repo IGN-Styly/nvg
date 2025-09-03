@@ -15,7 +15,6 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import org.styly.efm.EFM;
 import org.styly.efm.components.nvgtoggle;
 import org.styly.efm.registries.DataCompReg;
-import org.styly.efm.registries.ModItems;
 
 import static org.styly.efm.EFM.id;
 
@@ -31,20 +30,26 @@ public class NVGOverlayRenderer {
         ItemStack nvg = minecraft.player.getItemBySlot(EquipmentSlot.HEAD);
 
         if (nvg.has(DataCompReg.NVG_TOGGLE)) {
-            nvgtoggle data =  nvg.get(DataCompReg.NVG_TOGGLE);
-            if(data.toggle()){
+            nvgtoggle data = nvg.get(DataCompReg.NVG_TOGGLE);
+            if (data.toggle()) {
                 renderHelmetOverlay(event.getGuiGraphics(), data.overlay());
             }
         }
     }
 
-    private static void renderHelmetOverlay(GuiGraphics guiGraphics,int overlay) {
+    private static void renderHelmetOverlay(GuiGraphics guiGraphics, int overlay) {
         Minecraft minecraft = Minecraft.getInstance();
         ResourceLocation OVERLAY;
-        switch (overlay){
-            case 0:  OVERLAY = OVERLAY_0;   break;
-            case 1:  OVERLAY = OVERLAY_1;   break;
-            default: OVERLAY=OVERLAY_1;     break;
+        switch (overlay) {
+            case 0:
+                OVERLAY = OVERLAY_0;
+                break;
+            case 1:
+                OVERLAY = OVERLAY_1;
+                break;
+            default:
+                OVERLAY = OVERLAY_1;
+                break;
         }
         // Bind the overlay texture
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

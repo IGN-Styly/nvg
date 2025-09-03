@@ -12,10 +12,10 @@ public class ItemSlot implements Component, ItemContainer {
     int posY;
     int slotSize = 64;
     InventoryItem item = new InventoryItem(
-        ModItems.NVG_WP.toStack(),
-        2,
-        2,
-        false
+            ModItems.NVG_WP.toStack(),
+            2,
+            2,
+            false
     );
 
     public ItemSlot(int posX, int posY) {
@@ -24,10 +24,10 @@ public class ItemSlot implements Component, ItemContainer {
     }
 
     public void render(
-        GuiGraphics guiGraphics,
-        int mouseX,
-        int mouseY,
-        int offsetY
+            GuiGraphics guiGraphics,
+            int mouseX,
+            int mouseY,
+            int offsetY
     ) {
         int halfSize = slotSize / 2;
 
@@ -55,10 +55,10 @@ public class ItemSlot implements Component, ItemContainer {
 
             guiGraphics.renderItem(item.getItemStack(), -8, -8);
             guiGraphics.renderItemDecorations(
-                Minecraft.getInstance().font,
-                item.getItemStack(),
-                -8,
-                -8
+                    Minecraft.getInstance().font,
+                    item.getItemStack(),
+                    -8,
+                    -8
             );
 
             guiGraphics.pose().popPose();
@@ -89,16 +89,16 @@ public class ItemSlot implements Component, ItemContainer {
 
     @Override
     public boolean handleClick(
-        double mouseX,
-        double mouseY,
-        int offsetY,
-        int button,
-        DragContext ctx
+            double mouseX,
+            double mouseY,
+            int offsetY,
+            int button,
+            DragContext ctx
     ) {
         if (
-            over(mouseX, mouseY, offsetY) &&
-            button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
-            !this.item.getItemStack().isEmpty()
+                over(mouseX, mouseY, offsetY) &&
+                        button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
+                        !this.item.getItemStack().isEmpty()
         ) {
             ctx.from = this;
             ctx.dragging = true;
@@ -111,16 +111,16 @@ public class ItemSlot implements Component, ItemContainer {
 
     @Override
     public boolean handleRelease(
-        double mouseX,
-        double mouseY,
-        int offsetY,
-        int button,
-        DragContext ctx
+            double mouseX,
+            double mouseY,
+            int offsetY,
+            int button,
+            DragContext ctx
     ) {
         if (
-            button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
-            ctx.dragging &&
-            over(mouseX, mouseY, offsetY)
+                button == GLFW.GLFW_MOUSE_BUTTON_LEFT &&
+                        ctx.dragging &&
+                        over(mouseX, mouseY, offsetY)
         ) {
             // Save the current dragged item before swapping
             InventoryItem draggedItem = ctx.dragged;
@@ -154,7 +154,7 @@ public class ItemSlot implements Component, ItemContainer {
         // If we already have an item, this would be a logic error in the calling code
         if (!this.item.getItemStack().isEmpty()) {
             throw new RuntimeException(
-                "ItemSlot already contains an item, cannot return another"
+                    "ItemSlot already contains an item, cannot return another"
             );
         }
         this.item = item;

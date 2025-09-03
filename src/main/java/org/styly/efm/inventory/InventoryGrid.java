@@ -1,6 +1,5 @@
 package org.styly.efm.inventory;
 
-import net.minecraft.world.item.ItemStack;
 import org.styly.efm.EFM;
 
 /**
@@ -28,15 +27,15 @@ public class InventoryGrid {
     /**
      * Checks if an item can be placed at the specified position.
      *
-     * @param item Item to place
+     * @param item     Item to place
      * @param startRow Starting row position
      * @param startCol Starting column position
      * @return true if the item can be placed, false otherwise
      */
     public boolean canPlaceItem(
-        InventoryItem item,
-        int startRow,
-        int startCol
+            InventoryItem item,
+            int startRow,
+            int startCol
     ) {
         if (item == null) {
             return false;
@@ -47,10 +46,10 @@ public class InventoryGrid {
 
         // Check if item is within grid boundaries
         if (
-            startRow < 0 ||
-            startCol < 0 ||
-            startRow + height > rows ||
-            startCol + width > cols
+                startRow < 0 ||
+                        startCol < 0 ||
+                        startRow + height > rows ||
+                        startCol + width > cols
         ) {
             return false;
         }
@@ -70,14 +69,14 @@ public class InventoryGrid {
     /**
      * Places an item in the grid at the specified position.
      *
-     * @param item Item to place
+     * @param item     Item to place
      * @param startRow Starting row position
      * @param startCol Starting column position
      * @return true if the item was placed, false otherwise
      */
     public boolean placeItem(InventoryItem item, int startRow, int startCol) {
         if (!canPlaceItem(item, startRow, startCol)) {
-            EFM.LOGGER.info("{},{}",startRow,startCol);
+            EFM.LOGGER.info("{},{}", startRow, startCol);
             return false;
         }
 
@@ -146,18 +145,19 @@ public class InventoryGrid {
 
     /**
      * Check if an item with the given dimensions can fit at the specified position
+     *
      * @param startRow Starting row position
      * @param startCol Starting column position
-     * @param height Height of the item in cells
-     * @param width Width of the item in cells
+     * @param height   Height of the item in cells
+     * @param width    Width of the item in cells
      * @return true if the item fits, false otherwise
      */
     public boolean canFit(int startRow, int startCol, int height, int width) {
         if (
-            startRow < 0 ||
-            startCol < 0 ||
-            startRow + height > rows ||
-            startCol + width > cols
+                startRow < 0 ||
+                        startCol < 0 ||
+                        startRow + height > rows ||
+                        startCol + width > cols
         ) {
             return false;
         }
@@ -192,16 +192,13 @@ public class InventoryGrid {
             for (int c = 0; c < cols; c++) {
                 if (grid[r][c] == item) {
                     // Check if this is the top-left corner of the item
-                    boolean isTopLeft = true;
-                    if (r > 0 && grid[r - 1][c] == item) {
-                        isTopLeft = false;
-                    }
+                    boolean isTopLeft = r <= 0 || grid[r - 1][c] != item;
                     if (c > 0 && grid[r][c - 1] == item) {
                         isTopLeft = false;
                     }
 
                     if (isTopLeft) {
-                        return new int[] { r, c };
+                        return new int[]{r, c};
                     }
                 }
             }
@@ -214,22 +211,22 @@ public class InventoryGrid {
      *
      * @param startRow Starting row position
      * @param startCol Starting column position
-     * @param height Height of the area
-     * @param width Width of the area
+     * @param height   Height of the area
+     * @param width    Width of the area
      * @return true if the area is empty, false otherwise
      */
     public boolean isAreaEmpty(
-        int startRow,
-        int startCol,
-        int height,
-        int width
+            int startRow,
+            int startCol,
+            int height,
+            int width
     ) {
         // Check boundaries
         if (
-            startRow < 0 ||
-            startCol < 0 ||
-            startRow + height > rows ||
-            startCol + width > cols
+                startRow < 0 ||
+                        startCol < 0 ||
+                        startRow + height > rows ||
+                        startCol + width > cols
         ) {
             return false;
         }

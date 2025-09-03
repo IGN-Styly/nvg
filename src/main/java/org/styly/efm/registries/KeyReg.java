@@ -10,30 +10,30 @@ import org.lwjgl.glfw.GLFW;
 import org.styly.efm.EFM;
 
 @EventBusSubscriber(
-    value = Dist.CLIENT,
-    modid = EFM.MODID,
-    bus = EventBusSubscriber.Bus.MOD
+        value = Dist.CLIENT,
+        modid = EFM.MODID,
+        bus = EventBusSubscriber.Bus.MOD
 )
 public class KeyReg {
 
     // Key mapping is lazily initialized so it doesn't exist until it is registered
     public static final KeyMapping NVG_MAPPING = new KeyMapping(
-        "key.efm.nvg_toggle", // Will be localized using this translation key
-        InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
-        GLFW.GLFW_KEY_G, // Default key is G
-        "key.categories.misc" // Mapping will be in the misc category
+            "key.efm.nvg_toggle", // Will be localized using this translation key
+            InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
+            GLFW.GLFW_KEY_G, // Default key is G
+            "key.categories.misc" // Mapping will be in the misc category
     );
     public static final KeyMapping INV_MAPPING = new KeyMapping(
-        "key.efm.inventory", // Will be localized using this translation key
-        InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
-        GLFW.GLFW_KEY_I, // Default key is G
-        "key.categories.misc" // Mapping will be in the misc category
+            "key.efm.inventory", // Will be localized using this translation key
+            InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
+            GLFW.GLFW_KEY_I, // Default key is G
+            "key.categories.misc" // Mapping will be in the misc category
     );
     public static final KeyMapping ROT_MAPPING = new KeyMapping(
-        "key.efm.inventory.rotate", // Will be localized using this translation key
-        InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
-        GLFW.GLFW_KEY_R, // Default key is G
-        "key.categories.misc" // Mapping will be in the misc category
+            "key.efm.inventory.rotate", // Will be localized using this translation key
+            InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
+            GLFW.GLFW_KEY_R, // Default key is G
+            "key.categories.misc" // Mapping will be in the misc category
     );
 
     @SubscribeEvent

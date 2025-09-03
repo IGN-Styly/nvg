@@ -10,7 +10,6 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import org.styly.efm.EFM;
 import org.styly.efm.rederer.GPNVG_POST;
 import org.styly.efm.rederer.WPNVG_POST;
-import org.styly.efm.registries.ModTile;
 import team.lodestar.lodestone.systems.postprocess.PostProcessHandler;
 
 @EventBusSubscriber(modid = EFM.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -20,12 +19,14 @@ public class ClientSetup {
         PostProcessHandler.addInstance(GPNVG_POST.INSTANCE);
         PostProcessHandler.addInstance(WPNVG_POST.INSTANCE);
     }
+
     @SubscribeEvent
-    public static void registerTileRenderer(EntityRenderersEvent.RegisterRenderers event){
+    public static void registerTileRenderer(EntityRenderersEvent.RegisterRenderers event) {
     }
+
     @SubscribeEvent
-    public static void registerAdditionalModels(ModelEvent.RegisterAdditional event){
-        event.register(new ModelResourceLocation(EFM.id("block/small_crate"),"standalone"));
+    public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
+        event.register(new ModelResourceLocation(EFM.id("block/small_crate"), "standalone"));
     }
 
 }

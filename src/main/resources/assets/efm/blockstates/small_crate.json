@@ -1,8 +1,19 @@
 {
   "variants": {
-    "facing=east": { "model": "efm:block/small_crate", "y": 90 },
-    "facing=west": { "model": "efm:block/small_crate", "y": 270 },
-    "facing=north": { "model": "efm:block/small_crate" },
-    "facing=south": { "model": "efm:block/small_crate", "y": 180 }
+    "facing=east": {
+      "model": "efm:block/small_crate",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "efm:block/small_crate",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "efm:block/small_crate"
+    },
+    "facing=south": {
+      "model": "efm:block/small_crate",
+      "y": 180
+    }
   }
 }

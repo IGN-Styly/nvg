@@ -3,7 +3,6 @@ package org.styly.efm.player;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.styly.efm.EFM;
 
 /**
@@ -13,7 +12,7 @@ import org.styly.efm.EFM;
 public class Player2DRenderer {
 
     private static final ResourceLocation PLAYER_TEXTURE = EFM.id(
-        "textures/gui/player_body.png"
+            "textures/gui/player_body.png"
     );
     private static final int SIZE = 32;
     private static final int PLAYER_WIDTH = 32;
@@ -25,24 +24,24 @@ public class Player2DRenderer {
      * Renders the player body using texture blitting.
      */
     public void render(
-        GuiGraphics guiGraphics,
-        int x,
-        int y,
-        int width,
-        int height,
-        int scale
+            GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int width,
+            int height,
+            int scale
     ) {
         // Center the player in the available space
-        int centerX = (x + (width - PLAYER_WIDTH*scale) / 2)/scale;
-        int centerY = (y + (height - PLAYER_HEIGHT*scale) / 2)/scale;
+        int centerX = (x + (width - PLAYER_WIDTH * scale) / 2) / scale;
+        int centerY = (y + (height - PLAYER_HEIGHT * scale) / 2) / scale;
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().scale(scale,scale,1f);
+        guiGraphics.pose().scale(scale, scale, 1f);
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         // Draw body parts exactly as FirstAid does
-        drawPart(guiGraphics, centerX + 8, centerY + 0, 8, 0, 16, 16); // HEAD
+        drawPart(guiGraphics, centerX + 8, centerY, 8, 0, 16, 16); // HEAD
         drawPart(guiGraphics, centerX + 8, centerY + 16, 8, 16, 16, 24); // BODY
-        drawPart(guiGraphics, centerX + 0, centerY + 16, 0, 16, 8, 24); // LEFT_ARM
+        drawPart(guiGraphics, centerX, centerY + 16, 0, 16, 8, 24); // LEFT_ARM
         drawPart(guiGraphics, centerX + 24, centerY + 16, 24, 16, 8, 24); // RIGHT_ARM
         drawPart(guiGraphics, centerX + 8, centerY + 40, 8, 40, 8, 16); // LEFT_LEG
         drawPart(guiGraphics, centerX + 16, centerY + 40, 16, 40, 8, 16); // RIGHT_LEG
@@ -57,25 +56,25 @@ public class Player2DRenderer {
      * Similar to FirstAid's drawPart method.
      */
     private void drawPart(
-        GuiGraphics guiGraphics,
-        int screenX,
-        int screenY,
-        int texX,
-        int texY,
-        int width,
-        int height
+            GuiGraphics guiGraphics,
+            int screenX,
+            int screenY,
+            int texX,
+            int texY,
+            int width,
+            int height
     ) {
         // Match FirstAid's implementation exactly
         int rawTexX = texX;
         // We only have one state (healthy) so no need to multiply by state
         guiGraphics.blit(
-            PLAYER_TEXTURE,
-            screenX,
-            screenY,
-            texX,
-            texY,
-            width,
-            height
+                PLAYER_TEXTURE,
+                screenX,
+                screenY,
+                texX,
+                texY,
+                width,
+                height
         );
     }
 
@@ -92,8 +91,6 @@ public class Player2DRenderer {
     public int getRecommendedHeight() {
         return 80;
     }
-
-
 
 
 }

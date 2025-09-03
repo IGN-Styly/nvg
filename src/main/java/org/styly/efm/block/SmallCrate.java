@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -31,10 +30,11 @@ public class SmallCrate extends BaseEntityBlock {
     public static final VoxelShape BLOCK_AABB = Block.box(1, 0, 2, 15, 5, 14);
 
     public SmallCrate() {
-        super(Properties.ofFullCopy(Blocks.LODESTONE).noOcclusion().strength(2f,3f));
+        super(Properties.ofFullCopy(Blocks.LODESTONE).noOcclusion().strength(2f, 3f));
         this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 
     }
+
     @Override
     protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHitResult) {
         if (pLevel.isClientSide) {
@@ -49,30 +49,36 @@ public class SmallCrate extends BaseEntityBlock {
             return InteractionResult.CONSUME;
         }
     }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         // this is where the properties are actually added to the state
         pBuilder.add(FACING);
     }
+
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return null;
     }
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return BLOCK_AABB;
     }
+
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new SmallCrateTile(pPos,pState);
+        return new SmallCrateTile(pPos, pState);
     }
+
     @Override
     protected @NotNull RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
+
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-       return defaultBlockState().setValue(FACING,pContext.getHorizontalDirection());
+        return defaultBlockState().setValue(FACING, pContext.getHorizontalDirection());
     }
 }

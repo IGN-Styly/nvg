@@ -1,6 +1,5 @@
 package org.styly.efm.item;
 
-import org.styly.efm.model.GPNVG;
 import org.styly.efm.model.GPNVGITEM;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 

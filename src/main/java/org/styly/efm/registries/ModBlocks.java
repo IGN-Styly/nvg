@@ -11,7 +11,7 @@ public class ModBlocks {
 
     public static final DeferredBlock<SmallCrate> SMALL_CRATE = BLOCKS.register("small_crate", SmallCrate::new);
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }
 }

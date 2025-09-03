@@ -1,5 +1,7 @@
 package org.styly.efm.inventory;
 
+import net.minecraft.world.item.ItemStack;
+
 /**
  * Represents a grid structure for inventory items.
  * Manages the placement, removal, and querying of items in a 2D grid.
@@ -103,7 +105,7 @@ public class InventoryGrid {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (grid[r][c] == item) {
-                    grid[r][c] = null;
+                    grid[r][c] = new InventoryItem(ItemStack.EMPTY,1,1,false);
                     found = true;
                 }
             }

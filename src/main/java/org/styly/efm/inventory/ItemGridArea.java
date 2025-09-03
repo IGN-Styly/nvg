@@ -1,8 +1,12 @@
 package org.styly.efm.inventory;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.joml.Vector2d;
+import org.joml.Vector2dc;
+import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 import org.styly.efm.EFM;
 
 import java.util.HashMap;
@@ -55,7 +59,6 @@ public class ItemGridArea implements Component{
 
             // Scale factor for item
             float scale = availableSize / 16.0f;
-            EFM.LOGGER.info("WTH: "+scale+", "+availableSize);
             Vector2d cords = k.getValue();
             int x1 = (int) (x+cords.x*SIZE);
             int y1 = (int) (y+cords.y*SIZE-offsetY);
@@ -72,12 +75,31 @@ public class ItemGridArea implements Component{
     }
 
     @Override
-    public boolean over(double mouseX, double mouseY, int offsetY) {
-        return false;
-    }
+    public boolean over(double mouseX,double mouseY,int offsetY) {
 
+        int x1 = x ;
+        int y1 = y -offsetY;
+        int x2 = x + SIZE* container.getCols();
+        int y2 = y + SIZE*container.getRows()-offsetY;
+        return mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2;
+    }
+    public Vector2i cursorToGridPos(double mouseX, double mouseY){
+        double localX = mouseX-x;
+        double localY=mouseY-y;
+        Vector2i pos = new Vector2i((int)localX/SIZE,(int)localY/SIZE);
+        return pos;
+    }
     @Override
     public boolean handleClick(double mouseX, double mouseY, int offsetY, int button, DragContext ctx) {
+        Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
+        EFM.LOGGER.info(""+over(mouseX,mouseY,offsetY));
+        if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&!this.container.getItemAt(gridpos.y,gridpos.x).getItemStack().isEmpty()){
+            ctx.from=this;
+            ctx.dragging=true;
+            ctx.dragged=this.container.getItemAt(gridpos.y,gridpos.x);
+            container.removeItem(this.container.getItemAt(gridpos.y,gridpos.x));
+            return true;
+        }
         return false;
     }
 

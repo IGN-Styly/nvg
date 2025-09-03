@@ -12,7 +12,7 @@ public class ItemGridArea implements Component{
     InventoryGrid container = new InventoryGrid(7,6);
     int x;
     int y;
-    int SIZE=16;
+    int SIZE=24;
     public ItemGridArea(int x,int y){
         InventoryItem demo = new InventoryItem(Items.DIAMOND_SWORD.getDefaultInstance(),1,3,true);
         InventoryItem demo2 = new InventoryItem(Items.DIAMOND_HELMET.getDefaultInstance(),3,3,true);
@@ -50,6 +50,12 @@ public class ItemGridArea implements Component{
 
         for(Map.Entry<InventoryItem,Vector2d> k :metadata.entrySet()){
             int hoverColor = 0x44FFFFFF;
+            float padding = 4f;
+            float availableSize = SIZE*Math.max(Math.min(k.getKey().getHeight(),k.getKey().getWidth()),1)-(padding * 2);
+
+            // Scale factor for item
+            float scale = availableSize / 16.0f;
+            EFM.LOGGER.info("WTH: "+scale+", "+availableSize);
             Vector2d cords = k.getValue();
             int x1 = (int) (x+cords.x*SIZE);
             int y1 = (int) (y+cords.y*SIZE-offsetY);
@@ -57,9 +63,11 @@ public class ItemGridArea implements Component{
             int y2 = (int) (y + (cords.y+k.getKey().getHeight())*SIZE-offsetY);
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(x1+ (float) (x2 - x1) /2,y1+ (float) (y2 - y1) /2,0);
+            guiGraphics.pose().scale(scale, scale, 1.0f);
             guiGraphics.renderFakeItem(k.getKey().getStack(), -8, -8);
             guiGraphics.pose().popPose();
-            guiGraphics.fill(x1,y1,x2,y2,hoverColor);
+            if (mouseX >= x1 && mouseX < x2 && mouseY >= y1 && mouseY < y2) {
+            guiGraphics.fill(x1,y1,x2,y2,hoverColor);}
         }
     }
 

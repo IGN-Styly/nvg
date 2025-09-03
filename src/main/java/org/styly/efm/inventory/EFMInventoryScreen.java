@@ -77,7 +77,8 @@ public class EFMInventoryScreen extends Screen {
             if(component.handleRelease(mouseX,mouseY,0,button,context))ret=true;
         }
         if(context.dragging&&!ret){
-            context.from.item=context.dragged;
+            context.from.returnItem(context.dragged,context.originContext);
+            context.originContext=null;
             context.dragging=false;
             context.dragged=null;
             context.from=null;

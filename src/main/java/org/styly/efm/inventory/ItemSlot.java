@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import org.styly.efm.registries.ModItems;
 
-public class ItemSlot implements Component{
+public class ItemSlot implements Component,ItemContainer{
     int posX;
     int posY;
     int slotSize = 64;
@@ -104,14 +104,20 @@ public class ItemSlot implements Component{
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
 
                 if(!item.getItemStack().isEmpty()){
-                    ctx.from.item=item;
+                    ctx.from.returnItem(item,ctx.originContext);
                 }
                 ctx.dragging=false;
                 item=ctx.dragged;
+                ctx.from=null;
+                ctx.originContext=null;
                 ctx.dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
             return true;
         }
         return false;
     }
 
+    @Override
+    public void returnItem(InventoryItem item, Object contextData) {
+        this.item=item;
+    }
 }

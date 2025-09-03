@@ -12,7 +12,7 @@ import org.styly.efm.EFM;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemGridArea implements Component{
+public class ItemGridArea implements Component,ItemContainer{
     InventoryGrid container = new InventoryGrid(7,6);
     int x;
     int y;
@@ -92,9 +92,9 @@ public class ItemGridArea implements Component{
     @Override
     public boolean handleClick(double mouseX, double mouseY, int offsetY, int button, DragContext ctx) {
         Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
-        EFM.LOGGER.info(""+over(mouseX,mouseY,offsetY));
-        if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&!this.container.getItemAt(gridpos.y,gridpos.x).getItemStack().isEmpty()){
+        if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&this.container.getItemAt(gridpos.y,gridpos.x)!=null){
             ctx.from=this;
+            ctx.originContext = gridpos;
             ctx.dragging=true;
             ctx.dragged=this.container.getItemAt(gridpos.y,gridpos.x);
             container.removeItem(this.container.getItemAt(gridpos.y,gridpos.x));
@@ -104,7 +104,26 @@ public class ItemGridArea implements Component{
     }
 
     @Override
-    public boolean handleRelease(double mouseX, double mouseY, int offsetY, int button, DragContext ctx) {
+    public boolean handleRelease(double mouseX, double mouseY,int offsetY, int button, DragContext ctx) {
+        Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
+
+            if(this.container.getItemAt(gridpos.y,gridpos.x)!=null){
+                ctx.from.returnItem(this.container.getItemAt(gridpos.y,gridpos.x),ctx.originContext);
+            }
+            ctx.dragging=false;
+            ctx.originContext=null;
+            ctx.from=null;
+            container.placeItem(ctx.dragged,gridpos.y,gridpos.x);
+            ctx.dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public void returnItem(InventoryItem item, Object contextData) {
+        Vector2i ctx = (Vector2i) contextData;
+        this.container.placeItem(item,ctx.y,ctx.x);
     }
 }

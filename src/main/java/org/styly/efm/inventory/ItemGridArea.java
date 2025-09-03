@@ -39,10 +39,10 @@ public class ItemGridArea implements Component,ItemContainer{
             for(int k =0;k<container.getCols();k++){
                 int bgColor = 0x88000000;
                 int borderColor = 0xFFFFFFFF;
-                int x1 = x+n*SIZE ;
-                int y1 = y+k*SIZE-offsetY;
-                int x2 = x+(n+1)*SIZE;
-                int y2 = y + (k+1)*SIZE-offsetY;
+                int x1 = x+k*SIZE ;
+                int y1 = y+n*SIZE-offsetY;
+                int x2 = x+(k+1)*SIZE;
+                int y2 = y + (n+1)*SIZE-offsetY;
                 guiGraphics.fill(x1,y1,x2,y2,bgColor);
 
                 guiGraphics.fill(x1, y1, x2, y1 + 1, borderColor); // top
@@ -93,6 +93,7 @@ public class ItemGridArea implements Component,ItemContainer{
     public boolean handleClick(double mouseX, double mouseY, int offsetY, int button, DragContext ctx) {
         Vector2i gridpos = cursorToGridPos(mouseX,mouseY,offsetY);
         if(over(mouseX,mouseY,offsetY)&& button== GLFW.GLFW_MOUSE_BUTTON_LEFT&&this.container.getItemAt(gridpos.y,gridpos.x)!=null){
+            EFM.LOGGER.info("Clicked at {}, item: {}",gridpos,this.container.getItemAt(gridpos.y,gridpos.x));
             ctx.from=this;
             ctx.originContext = gridpos;
             ctx.dragging=true;
@@ -106,7 +107,7 @@ public class ItemGridArea implements Component,ItemContainer{
     @Override
     public boolean handleRelease(double mouseX, double mouseY,int offsetY, int button, DragContext ctx) {
         Vector2i gridpos = cursorToGridPos(mouseX,mouseY,offsetY);
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)&&container.canPlaceItem(ctx.dragged,gridpos.y,gridpos.x)) {
             EFM.LOGGER.info("{}",gridpos);
 
             if(this.container.getItemAt(gridpos.y,gridpos.x)!=null){

@@ -1,6 +1,7 @@
 package org.styly.efm.inventory;
 
 import net.minecraft.world.item.ItemStack;
+import org.styly.efm.EFM;
 
 /**
  * Represents a grid structure for inventory items.
@@ -76,6 +77,7 @@ public class InventoryGrid {
      */
     public boolean placeItem(InventoryItem item, int startRow, int startCol) {
         if (!canPlaceItem(item, startRow, startCol)) {
+            EFM.LOGGER.info("{},{}",startRow,startCol);
             return false;
         }
 
@@ -105,7 +107,7 @@ public class InventoryGrid {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (grid[r][c] == item) {
-                    grid[r][c] = new InventoryItem(ItemStack.EMPTY,1,1,false);
+                    grid[r][c] = null;
                     found = true;
                 }
             }

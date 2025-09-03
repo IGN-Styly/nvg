@@ -107,6 +107,7 @@ public class ItemGridArea implements Component,ItemContainer{
     public boolean handleRelease(double mouseX, double mouseY,int offsetY, int button, DragContext ctx) {
         Vector2i gridpos = cursorToGridPos(mouseX,mouseY);
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && ctx.dragging&&over(mouseX,mouseY,offsetY)) {
+            EFM.LOGGER.info("{}",gridpos);
 
             if(this.container.getItemAt(gridpos.y,gridpos.x)!=null){
                 ctx.from.returnItem(this.container.getItemAt(gridpos.y,gridpos.x),ctx.originContext);
@@ -114,6 +115,7 @@ public class ItemGridArea implements Component,ItemContainer{
             ctx.dragging=false;
             ctx.originContext=null;
             ctx.from=null;
+
             container.placeItem(ctx.dragged,gridpos.y,gridpos.x);
             ctx.dragged=new InventoryItem(ItemStack.EMPTY,0,0,false);
             return true;
